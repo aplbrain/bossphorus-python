@@ -8,20 +8,11 @@ from utils import block_compute
 
 from flask import Flask, request, Response, send_file, jsonify
 import numpy as np
-# from intern.remote.boss import BossRemote
-# from intern.resource.boss.resource import ChannelResource
-# from intern.utils.parallel import block_compute
-# from requests import codes, post
 
 APP = Flask(__name__)
 
 UPLOADS_PATH = "./uploads"
 BLOCK_SIZE = (256, 256, 256)
-
-
-"""
-https://api.theboss.io/v1/cutout/:collection/:experiment/:channel/:resolution/:x_range/:y_range/:z_range/:time_range/?iso=:iso
-"""
 
 
 def file_compute(x_start, x_stop,
@@ -59,6 +50,20 @@ def file_compute(x_start, x_stop,
 
 
 def blockfile_indices(xs, ys, zs, origin=(0, 0, 0), block_size=(256, 256, 256)):
+    """
+    Returns the indices PER BLOCK for each file required.
+
+    Returns the indices of the offset PER BLOCK of each file that is
+    required in order to construct the final volume.
+
+    For instance, in 1D:
+
+    Blocksize is 100, origin is 0.
+
+    Request of (10, 50)  returns                       (10, 50)
+    Request of (10, 150) returns             (10, 100), (0, 50)
+    Request of (10, 250) returns (10, 100), (0, 100), (100, 50)
+    """
     blocks = block_compute(
         xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
         origin, block_size
@@ -163,7 +168,7 @@ class FilesystemStorageManager(StorageManager):
                     f[2] + i[2][0]: f[2] + i[2][1],
                 ] = data_partial
 
-            except:
+            except ValueError:
                 payload[
                     f[0] + i[0][0]: f[0] + i[0][1],
                     f[1] + i[1][0]: f[1] + i[1][1],
@@ -189,6 +194,17 @@ class FilesystemStorageManager(StorageManager):
         return np.save(fname, data)
 
     def retrieve(self, col, exp, chan, res, b):
+        if not (
+            os.path.isdir("{}/{}".format(UPLOADS_PATH, col)) and
+            os.path.isdir("{}/{}/{}".format(UPLOADS_PATH, col, exp)) and
+            os.path.isdir("{}/{}/{}/{}".format(
+                UPLOADS_PATH, col, exp, chan
+            ))
+        ):
+            raise IOError("{}/{}/{} not found.".format(
+                col, exp, chan
+            ))
+            # return np.zeros(self.block_size, dtype="uint8")
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
             UPLOADS_PATH,
             col, exp, chan,
@@ -206,8 +222,9 @@ MANAGER = FilesystemStorageManager()
 @APP.route("/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/", methods=["POST"])
 def upload_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range, z_range):
     """
-    Upload a volume
+    Upload a volume.
 
+    Uses bossURI format.
     """
     for _, f in request.files.items():
         memfile = io.BytesIO()
@@ -224,25 +241,23 @@ def upload_cutout_xyz(collection, experiment, channel, resolution, x_range, y_ra
 @APP.route("/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/", methods=["GET"])
 def get_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range, z_range):
     """
-    Download a volume
+    Download a volume.
+
+    Returns 404 if the bossURI is not found.
     """
     xs = [int(i) for i in x_range.split(":")]
     ys = [int(i) for i in y_range.split(":")]
     zs = [int(i) for i in z_range.split(":")]
-    if (
-        os.path.isdir("{}/{}".format(UPLOADS_PATH, collection)) and
-        os.path.isdir("{}/{}/{}".format(UPLOADS_PATH, collection, experiment)) and
-        os.path.isdir("{}/{}/{}/{}".format(UPLOADS_PATH, collection, experiment, channel))
-    ):
+    try:
         data = MANAGER.getdata(collection, experiment, channel, resolution, xs, ys, zs)
         res = {}
         res["dtype"] = str(data.dtype)
         res["data"] = data.tolist()
         return jsonify(res)
-    else:
+    except IOError as e:
         return Response(
-            json.dumps({"message": "DNE"}),
-            status=402,
+            json.dumps({"message": str(e)}),
+            status=404,
             mimetype="application/json"
         )
 
