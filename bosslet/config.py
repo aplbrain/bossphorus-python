@@ -14,5 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-UPLOADS_PATH: str = "./uploads"
-BLOCK_SIZE: [int, int, int] = (256, 256, 256)
+UPLOADS_PATH = "./uploads"
+BLOCK_SIZE = (256, 256, 256)
+# UPLOADS_PATH: str = "./uploads"
+# BLOCK_SIZE: [int, int, int] = (256, 256, 256)
