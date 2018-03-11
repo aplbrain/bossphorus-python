@@ -1,29 +1,52 @@
 #!/usr/bin/env python3
 
+"""
+Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 import io
 import json
 import os
 
 from typing import List
 
-from flask import Flask, request, Response, send_file, jsonify
+from flask import Flask, request, Response, jsonify
 import numpy as np
+
 
 APP = Flask(__name__)
 
-UPLOADS_PATH = "./uploads"
-BLOCK_SIZE = (64, 64, 64)
+
+UPLOADS_PATH: str = "./uploads"
+BLOCK_SIZE: [int, int, int] = (256, 256, 256)
 
 
 def file_compute(
-        x_start, x_stop,
-        y_start, y_stop,
-        z_start, z_stop,
-        origin=(0, 0, 0),
-        block_size=(256, 256, 256)
+        x_start: int, x_stop: int,
+        y_start: int, y_stop: int,
+        z_start: int, z_stop: int,
+        block_size: [int, int, int] = BLOCK_SIZE
     ):
     """
+    Compute the (possibly extant) files that would hold this volume.
+
     Which files do we need to pull for this volume?
+
+    Arguments:
+        q_start, q_stop: Bounds along Q dimension
+        block_size: The block-size stored in each file
     """
     # x
 
@@ -50,16 +73,18 @@ def file_compute(
                 files.append((x, y, z))
     return files
 
-def block_compute(x_start, x_stop,
-                 y_start, y_stop,
-                 z_start, z_stop,
-                 origin=(0, 0, 0),
-                 block_size=(256, 256, 256)):
-    """
-    What are the block-aligned indices for this volume?
-    """
-    # x
 
+def block_compute(
+        x_start: int, x_stop: int,
+        y_start: int, y_stop: int,
+        z_start: int, z_stop: int,
+        block_size: [int, int, int] = (256, 256, 256)):
+    """
+    Compute the block-aligned delimiters for this volume.
+
+    What are the block-aligned indices for this volume?
+
+    """
     x_block_origins = [
         b
         for b in range(0, x_stop + block_size[0], block_size[0])
@@ -96,9 +121,14 @@ def block_compute(x_start, x_stop,
     return files
 
 
-def blockfile_indices(xs, ys, zs, origin=(0, 0, 0), block_size=(256, 256, 256)):
+def blockfile_indices(
+        xs: [int, int],
+        ys: [int, int],
+        zs: [int, int],
+        block_size: [int, int, int] = BLOCK_SIZE
+    ):
     """
-    Returns the indices PER BLOCK for each file required.
+    Return the indices PER BLOCK for each file required.
 
     Returns the indices of the offset PER BLOCK of each file that is
     required in order to construct the final volume.
@@ -113,11 +143,11 @@ def blockfile_indices(xs, ys, zs, origin=(0, 0, 0), block_size=(256, 256, 256)):
     """
     blocks = block_compute(
         xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-        origin, block_size
+        block_size
     )
     files = file_compute(
         xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-        origin, block_size
+        block_size
     )
 
     inds = []
@@ -134,40 +164,61 @@ def blockfile_indices(xs, ys, zs, origin=(0, 0, 0), block_size=(256, 256, 256)):
 class StorageManager:
     """
     Abstract class.
+
+    StorageManagers are responsible for shutting data in and out of a storage
+    mechanism, which may be a filesystem (such as FileSystemStorageManager) or
+    a remote resource, such as AWS S3 or even another bosslet.
+
     """
+
     pass
 
 
 class FilesystemStorageManager(StorageManager):
+    """
+    File System management for volumetric data.
 
-    def __init__(self, upload_path=UPLOADS_PATH, block_size=BLOCK_SIZE):
+    Contains logic for reading and writing to local filesystem.
+    """
+
+    def __init__(
+            self,
+            upload_path: str = UPLOADS_PATH,
+            block_size: [int, int, int] = BLOCK_SIZE
+        ):
+        """
+        Create a new FileSystemStorageManager.
+
+        Arguments:
+            upload_path: Where to store the data tree
+            block_size: How much data should go in each file
+        """
         self.upload_path = upload_path
         self.block_size = block_size
 
-    def setdata(self, data, col, exp, chan, res, xs, ys, zs):
+    def setdata(
+            self,
+            data: np.array,
+            col: str, exp: str, chan: str,
+            res: int, xs: [int, int], ys: [int, int], zs: [int, int]
+        ):
         """
-        Uploads the file.
+        Upload the file.
+
+        Arguments:
+            bossURI
         """
         # Chunk the file into its parts
-        blocks = block_compute(
-            xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-            origin=(0, 0, 0),
-            block_size=self.block_size
-        )
         files = file_compute(
             xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-            origin=(0, 0, 0),
             block_size=self.block_size,
         )
         indices = blockfile_indices(
             xs, ys, zs,
-            origin=(0, 0, 0),
             block_size=self.block_size
         )
 
-        print(blocks)
-
-        for b, f, i in zip(blocks, files, indices):
+        for f, i in zip(files, indices):
             try:
                 data_partial = self.retrieve(col, exp, chan, res, f)
             except:
@@ -184,23 +235,24 @@ class FilesystemStorageManager(StorageManager):
             ]
             data_partial = self.store(data_partial, col, exp, chan, res, f)
 
-    def getdata(self, col, exp, chan, res, xs, ys, zs):
+    def getdata(
+            self,
+            col: str, exp: str, chan: str,
+            res: int, xs: [int, int], ys: [int, int], zs: [int, int]
+        ):
         """
-        Gets the data from disk.
+        Get the data from disk.
+
+        Arguments:
+            bossURI
+
         """
-        blocks = block_compute(
-            xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-            origin=(0, 0, 0),
-            block_size=self.block_size
-        )
         files = file_compute(
             xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-            origin=(0, 0, 0),
             block_size=self.block_size,
         )
         indices = blockfile_indices(
             xs, ys, zs,
-            origin=(0, 0, 0),
             block_size=self.block_size
         )
 
@@ -209,7 +261,7 @@ class FilesystemStorageManager(StorageManager):
             (ys[1] - ys[0]),
             (zs[1] - zs[0])
         ), dtype="uint8")
-        for b, f, i in zip(blocks, files, indices):
+        for f, i in zip(files, indices):
             try:
                 data_partial = self.retrieve(col, exp, chan, res, f)[
                     i[0][0]:i[0][1],
@@ -230,7 +282,20 @@ class FilesystemStorageManager(StorageManager):
 
         return payload
 
-    def store(self, data, col, exp, chan, res, b):
+    def store(
+            self,
+            data: np.array,
+            col: str, exp: str, chan: str, res: int,
+            b: [int, int, int]
+        ):
+        """
+        Store a single block file.
+
+        Arguments:
+            data (np.array)
+            bossURI
+
+        """
         os.makedirs("{}/{}/{}/{}/".format(
             UPLOADS_PATH,
             col, exp, chan
@@ -246,14 +311,25 @@ class FilesystemStorageManager(StorageManager):
         # print(fname)
         return np.save(fname, data)
 
-    def retrieve(self, col, exp, chan, res, b):
-        if not (
-            os.path.isdir("{}/{}".format(UPLOADS_PATH, col)) and
-            os.path.isdir("{}/{}/{}".format(UPLOADS_PATH, col, exp)) and
-            os.path.isdir("{}/{}/{}/{}".format(
-                UPLOADS_PATH, col, exp, chan
-            ))
+    def retrieve(
+            self,
+            col: str, exp: str, chan: str, res: int,
+            b: [int, int, int]
         ):
+        """
+        Pull a single block from disk.
+
+        Arguments:
+            bossURI
+
+        """
+        if not (
+                os.path.isdir("{}/{}".format(UPLOADS_PATH, col)) and
+                os.path.isdir("{}/{}/{}".format(UPLOADS_PATH, col, exp)) and
+                os.path.isdir("{}/{}/{}/{}".format(
+                    UPLOADS_PATH, col, exp, chan
+                ))
+            ):
             raise IOError("{}/{}/{} not found.".format(
                 col, exp, chan
             ))
@@ -272,7 +348,11 @@ class FilesystemStorageManager(StorageManager):
 
 MANAGER = FilesystemStorageManager()
 
-@APP.route("/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/", methods=["POST"])
+
+@APP.route(
+    "/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/",
+    methods=["POST"]
+)
 def upload_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range, z_range):
     """
     Upload a volume.
@@ -291,7 +371,10 @@ def upload_cutout_xyz(collection, experiment, channel, resolution, x_range, y_ra
     return ""
 
 
-@APP.route("/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/", methods=["GET"])
+@APP.route(
+    "/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/",
+    methods=["GET"]
+)
 def get_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range, z_range):
     """
     Download a volume.
