@@ -1,8 +1,8 @@
 <p align="center">
-<h1 align="center"> b o s s l e t</h1>
-<img align="center" width="200" src="./logo.png" />
-<p>a simple volumetric datastore for dense 3D data</p>
+ <img align="center" alt="bosslet" src="./logo.png" width="100" />
+ <h1 align="center" fontsize="2em">b o s s l e t</h1>
 </p>
+<p align="center">a simple volumetric datastore for dense 3D data</p>
 
 ## Usage
 
