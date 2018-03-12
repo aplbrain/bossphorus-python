@@ -1,12 +1,8 @@
-<div>
-<center>
-<h1> b o s s l e t</h1>
-<img width="200" src="./logo.png" />
-</center>
-</div>
-
-
-***bosslet*** is a simple volumetric datastore for dense 3D data.
+<p align="center">
+<h1 align="center"> b o s s l e t</h1>
+<img align="center" width="200" src="./logo.png" />
+<p>a simple volumetric datastore for dense 3D data</p>
+</p>
 
 ## Usage
 
