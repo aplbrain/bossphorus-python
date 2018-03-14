@@ -21,7 +21,8 @@ import json
 
 from typing import List
 
-from flask import Flask, request, Response, jsonify
+import blosc
+from flask import Flask, request, Response, jsonify, make_response
 import numpy as np
 
 from .StorageManager import FilesystemStorageManager
@@ -62,6 +63,31 @@ def upload_cutout_xyz(collection, experiment, channel, resolution, x_range, y_ra
 
 
 @APP.route(
+    "/v1/collection/<collection>/experiment/<experiment>/channel/<channel>/",
+    methods=["GET"]
+)
+def get_channel(collection, experiment, channel):
+    """
+    Upload a volume.
+
+    Uses bossURI format.
+    """
+    return jsonify({
+        "name": channel,
+        "description": "",
+        "experiment": experiment,
+        "default_time_sample": 0,
+        "type": "image",
+        "base_resolution": 0,
+        "datatype": "uint8",
+        "creator": "None",
+        "sources": [],
+        "downsample_status": "NOT_DOWNSAMPLED",
+        "related": []
+    })
+
+
+@APP.route(
     "/v1/cutout/<collection>/<experiment>/<channel>/<resolution>/<x_range>/<y_range>/<z_range>/",
     methods=["GET"]
 )
@@ -76,10 +102,11 @@ def get_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range
     zs = [int(i) for i in z_range.split(":")]
     try:
         data = MANAGER.getdata(collection, experiment, channel, resolution, xs, ys, zs)
-        res = {}
-        res["dtype"] = str(data.dtype)
-        res["data"] = data.tolist()
-        return jsonify(res)
+        response = make_response(blosc.compress(data, typesize=16))
+        # response = Response()
+        # response.status_code = 200
+        # response._content = blosc.compress(data, typesize=16)
+        return response
     except IOError as e:
         return Response(
             json.dumps({"message": str(e)}),
