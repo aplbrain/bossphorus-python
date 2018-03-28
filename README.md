@@ -4,7 +4,7 @@
 </p>
 <p align="center">a simple volumetric datastore for dense 3D data</p>
 
-> **WARNING!** that *bossphorus* is **NOT** stable and **NOT** tested. Use at your own risk, and always keep a backup copy of your data someplace safe.
+> **WARNING!** *Bossphorus* is **NOT** stable and **NOT** tested. Use at your own risk, and always keep a backup copy of your data someplace safe.
 
 ## Why use bossphorus?
 
