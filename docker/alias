@@ -1,1 +1,1 @@
-function bosslet { docker run -dt -p 5000:5000 -v $1:/bosslet/uploads bosslet; }
+function bossphorus { docker run -dt -p 5000:5000 -v $1:/bossphorus/uploads bossphorus; }

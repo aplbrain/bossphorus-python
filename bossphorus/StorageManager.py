@@ -28,7 +28,7 @@ class StorageManager:
 
     StorageManagers are responsible for shutting data in and out of a storage
     mechanism, which may be a filesystem (such as FileSystemStorageManager) or
-    a remote resource, such as AWS S3 or even another bosslet.
+    a remote resource, such as AWS S3 or even another bossphorus.
 
     """
 

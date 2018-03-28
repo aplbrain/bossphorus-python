@@ -1,7 +1,7 @@
 import os
 from distutils.core import setup
 
-import bosslet
+import bossphorus
 
 """
 git tag {VERSION}
@@ -9,10 +9,10 @@ git push --tags
 python setup.py sdist upload -r pypi
 """
 
-VERSION = bosslet.__version__
+VERSION = bossphorus.__version__
 
 setup(
-    name="bosslet",
+    name="bossphorus",
     version=VERSION,
     author="Jordan Matelsky",
     author_email="jordan.matelsky@jhuapl.edu",
@@ -24,7 +24,7 @@ setup(
         "download"
     ],
     #url="https://github.com/ ... / ... /tarball/" + VERSION,
-    packages=['bosslet'],
+    packages=['bossphorus'],
     scripts=[
        #  'scripts/'
     ],
