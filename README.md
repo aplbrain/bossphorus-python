@@ -1,6 +1,6 @@
 <p align="center">
  <img align="center" alt="bossphorus" src="./logo.png" width="100" />
- <h1 align="center" fontsize="2em">b o s s l e t</h1>
+ <h1 align="center" fontsize="2em">b o s s p h o r u s</h1>
 </p>
 <p align="center">a simple volumetric datastore for dense 3D data</p>
 
