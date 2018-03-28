@@ -6,6 +6,8 @@
 
 > **WARNING!** *Bossphorus* is **NOT** stable and **NOT** tested. Use at your own risk, and always keep a backup copy of your data someplace safe.
 
+> **NOTE**: Better bossDB compatibility is under development in the `boss-shim` branch.
+
 ## Why use bossphorus?
 
 *bossphorus* simplifies data-access patterns for data that do not fit into RAM. When you write a 100-gigabyte file, *bossphorus* automatically slices your dataset up to fit in bite-sized pieces.
