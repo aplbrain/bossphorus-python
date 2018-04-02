@@ -23,7 +23,7 @@ You can either run *bossphorus* using Python on your host machine, or use the pr
 #### 1. Build the docker image
 
 ```shell
-docker built -t bossphorus .
+docker build -t bossphorus .
 ```
 
 #### 2. Create a directory for your filesystem to live in.
