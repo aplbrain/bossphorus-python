@@ -18,8 +18,8 @@ limitations under the License.
 import os
 import numpy as np
 
-from .config import BLOCK_SIZE, UPLOADS_PATH
-from .utils import file_compute, blockfile_indices
+from config import BLOCK_SIZE, UPLOADS_PATH
+from utils import file_compute, blockfile_indices
 
 
 class StorageManager:
