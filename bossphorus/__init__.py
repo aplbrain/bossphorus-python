@@ -25,9 +25,9 @@ import blosc
 from flask import Flask, request, Response, jsonify, make_response
 import numpy as np
 
-from StorageManager import FilesystemStorageManager
-from config import BLOCK_SIZE, UPLOADS_PATH
-from utils import file_compute, blockfile_indices
+from .StorageManager import FilesystemStorageManager
+from .config import BLOCK_SIZE, UPLOADS_PATH
+from .utils import file_compute, blockfile_indices
 
 
 __version__ = "0.1.0"
