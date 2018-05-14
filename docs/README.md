@@ -1,10 +1,8 @@
-<p align="center">
- <img align="center" alt="bossphorus" src="./logo.png" width="100" />
- <h1 align="center" fontsize="2em">b o s s p h o r u s</h1>
-</p>
-<p align="center">a simple volumetric datastore for dense 3D data</p>
-
-> **WARNING!** *Bossphorus* is **NOT** stable and **NOT** tested. Use at your own risk, and always keep a backup copy of your data someplace safe.
+---
+id: home
+title: Bossphorus
+sidebar_label: home
+---
 
 ## Why use bossphorus?
 
@@ -78,8 +76,3 @@ The primary advantage of *bossphorus* is that it uses an identical API to that o
 |---------|-------------|
 | [bossDB](https://bossdb.org) | Petabyte-scale, Cloud-Native Volumetric Database |
 | [DVID](https://github.com/janelia-flyem/dvid) | Distributed, Versioned, Image-oriented Dataservice
-
-
------
-
-<p align="center"><small>Made with ♥ at <a href="http://www.jhuapl.edu/"><img alt="JHU APL" align="center" src="./website/static/img/apl-logo.png" height="23px"></a></small></p>
