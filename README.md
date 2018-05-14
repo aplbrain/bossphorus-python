@@ -82,4 +82,4 @@ The primary advantage of *bossphorus* is that it uses an identical API to that o
 
 -----
 
-<p align="center"><small>Made with ♥ at <a href="http://jhuapl.edu"><img alt="JHU APL" align="center" src="./apl-logo.png" height="23px"></a></small></p>
+<p align="center"><small>Made with ♥ at <a href="http://www.jhuapl.edu/"><img alt="JHU APL" align="center" src="./apl-logo.png" height="23px"></a></small></p>
