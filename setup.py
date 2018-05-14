@@ -19,9 +19,7 @@ setup(
     description=("Baby bossDB"),
     license="BSD",
     keywords=[
-        "kindle",
-        "ebook",
-        "download"
+
     ],
     #url="https://github.com/ ... / ... /tarball/" + VERSION,
     packages=['bossphorus'],
