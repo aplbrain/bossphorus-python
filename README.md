@@ -54,6 +54,12 @@ mkdir ./uploads
 python3 ./run.py
 ```
 
+#### pip Method
+
+```shell
+pip3 install -U bossphorus
+```
+
 ## Configuration
 
 You can modify the top-level variables in `bossphorus/config.py` in order to change where bossphorus stores its data by default, and what size each file is by default.
