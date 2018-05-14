@@ -30,9 +30,5 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
-    ],
-    install_requires=[
-        'pandas',
-        'numpy'
-    ],
+    ]
 )
