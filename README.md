@@ -78,3 +78,8 @@ The primary advantage of *bossphorus* is that it uses an identical API to that o
 |---------|-------------|
 | [bossDB](https://bossdb.org) | Petabyte-scale, Cloud-Native Volumetric Database |
 | [DVID](https://github.com/janelia-flyem/dvid) | Distributed, Versioned, Image-oriented Dataservice
+
+
+-----
+
+<p align="center"><img align="center" src="./apl-logo.png" height="23px"> <small>Made with&nbsp;❤️&nbsp;&nbsp;at JHU APL</small></p>
