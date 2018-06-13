@@ -4,6 +4,14 @@
 </p>
 <p align="center">a simple volumetric datastore for dense 3D data</p>
 
+<p align=center>
+    <img src="https://img.shields.io/pypi/v/bossphorus.svg" />
+    <img src="https://img.shields.io/github/last-commit/aplbrain/bossphorus.svg" />
+    <img src="https://img.shields.io/badge/Extremely Rad-👌-00ddcc.svg" />
+    <img src="https://img.shields.io/github/license/aplbrain/bossphorus.svg" />
+</p>
+
+
 > **WARNING!** *Bossphorus* is **NOT** stable and **NOT** tested. Use at your own risk, and always keep a backup copy of your data someplace safe.
 
 ## Why use bossphorus?
