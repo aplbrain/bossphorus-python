@@ -6,12 +6,12 @@ In particular, **we do not plan to implement authentication or permissions logic
 
 ---
 
-| **Won** 't Implement | On Roadmap | In Progress | Complete |
+| Won't Implement | On Roadmap | In Progress | Complete |
 |-----------------|------------|-------------|----------|
-| **•**                | ⛔         | ⌛           | ✅ ️      |
+| •               | ⛔         | ⌛           | ✅ ️      |
 
 
-| **Endpoint**  | Status | Notes |
+| Endpoint | Status | Notes |
 |----------|--------|-------|
 | **GET**  `/sso/user/:user_name` | ️• | |
 | **POST**  `/sso/user/:user_name` | ️• | |
