@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from abc import ABC, abstractmethod
 import os
 import numpy as np
 
@@ -22,7 +23,7 @@ from .config import BLOCK_SIZE, UPLOADS_PATH
 from .utils import file_compute, blockfile_indices
 
 
-class StorageManager:
+class StorageManager(ABC):
     """
     Abstract class.
 
@@ -32,7 +33,15 @@ class StorageManager:
 
     """
 
-    pass
+    @abstractmethod
+    def getdata(self, col: str, exp: str, chan: str,
+                res: int, xs: [int, int], ys: [int, int], zs: [int, int]):
+        pass
+
+    @abstractmethod
+    def setdata(self, data: np.array, col: str, exp: str, chan: str,
+                res: int, xs: [int, int], ys: [int, int], zs: [int, int]):
+        pass
 
 
 class FilesystemStorageManager(StorageManager):
