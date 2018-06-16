@@ -25,13 +25,13 @@ import blosc
 from flask import Flask, request, Response, jsonify, make_response
 import numpy as np
 
-from .StorageManager import FilesystemStorageManager
+from . import storagemanager
 
 __version__ = "0.2.0"
 
 def create_app():
     app = Flask(__name__)
-    manager = FilesystemStorageManager("./uploads", 256)
+    manager = storagemanager.create("./uploads", 256)
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"
@@ -70,7 +70,6 @@ def create_app():
             manager.setdata(data, collection, experiment, channel, resolution, xs, ys, zs)
         return ""
 
-    
     @app.route(
         "/v1/collection/<collection>/experiment/<experiment>/channel/<channel>/",
         methods=["GET"]

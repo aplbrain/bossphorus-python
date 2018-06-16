@@ -1,47 +1,8 @@
-#!/usr/bin/env python3
-"""
-Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
-
-from abc import ABC, abstractmethod
 import os
 import numpy as np
 
+from .StorageManager import StorageManager
 from .utils import file_compute, blockfile_indices
-
-
-class StorageManager(ABC):
-    """
-    Abstract class.
-
-    StorageManagers are responsible for shutting data in and out of a storage
-    mechanism, which may be a filesystem (such as FileSystemStorageManager) or
-    a remote resource, such as AWS S3 or even another bossphorus.
-
-    """
-
-    @abstractmethod
-    def getdata(self, col: str, exp: str, chan: str,
-                res: int, xs: [int, int], ys: [int, int], zs: [int, int]):
-        pass
-
-    @abstractmethod
-    def setdata(self, data: np.array, col: str, exp: str, chan: str,
-                res: int, xs: [int, int], ys: [int, int], zs: [int, int]):
-        pass
-
 
 class FilesystemStorageManager(StorageManager):
     """
@@ -50,15 +11,15 @@ class FilesystemStorageManager(StorageManager):
     Contains logic for reading and writing to local filesystem.
     """
 
-    def __init__(self, upload_path: str, block_size: [int, int, int]):
+    def __init__(self, storage_path: str, block_size: [int, int, int]):
         """
         Create a new FileSystemStorageManager.
 
         Arguments:
-            upload_path: Where to store the data tree
+            storage_path: Where to store the data tree
             block_size: How much data should go in each file
         """
-        self.upload_path = upload_path
+        self.storage_path = storage_path
         self.block_size = block_size
 
     def setdata(self, data: np.array, col: str, exp: str, chan: str, res: int,
@@ -151,11 +112,11 @@ class FilesystemStorageManager(StorageManager):
 
         """
         os.makedirs("{}/{}/{}/{}/".format(
-            self.upload_path,
+            self.storage_path,
             col, exp, chan
         ), exist_ok=True)
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
-            self.upload_path,
+            self.storage_path,
             col, exp, chan,
             res,
             (b[0], b[0] + self.block_size[0]),
@@ -174,14 +135,14 @@ class FilesystemStorageManager(StorageManager):
             bossURI
 
         """
-        if not (os.path.isdir("{}/{}".format(self.upload_path, col)) and
-                os.path.isdir("{}/{}/{}".format(self.upload_path, col, exp)) and
-                os.path.isdir("{}/{}/{}/{}".format(self.upload_path, col, exp, chan))):
+        if not (os.path.isdir("{}/{}".format(self.storage_path, col)) and
+                os.path.isdir("{}/{}/{}".format(self.storage_path, col, exp)) and
+                os.path.isdir("{}/{}/{}/{}".format(self.storage_path, col, exp, chan))):
             raise IOError("{}/{}/{} not found.".format(
                 col, exp, chan
             ))
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
-            self.upload_path,
+            self.storage_path,
             col, exp, chan,
             res,
             (b[0], b[0] + self.block_size[0]),
@@ -189,3 +150,4 @@ class FilesystemStorageManager(StorageManager):
             (b[2], b[2] + self.block_size[2]),
         )
         return np.load(fname)
+    
