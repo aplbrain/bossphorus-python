@@ -9,9 +9,12 @@ name = "pypi"
 
 Flask = "*"
 numpy = "*"
+blosc = "*"
 
 
 [dev-packages]
 
 pylint = "*"
 mypy = "*"
+wheel = "*"
+twine = "*"
