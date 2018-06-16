@@ -19,7 +19,6 @@ from abc import ABC, abstractmethod
 import os
 import numpy as np
 
-from .config import BLOCK_SIZE, UPLOADS_PATH
 from .utils import file_compute, blockfile_indices
 
 
@@ -51,11 +50,7 @@ class FilesystemStorageManager(StorageManager):
     Contains logic for reading and writing to local filesystem.
     """
 
-    def __init__(
-            self,
-            upload_path: str = UPLOADS_PATH,
-            block_size: [int, int, int] = BLOCK_SIZE
-        ):
+    def __init__(self, upload_path: str, block_size: [int, int, int]):
         """
         Create a new FileSystemStorageManager.
 
@@ -66,12 +61,8 @@ class FilesystemStorageManager(StorageManager):
         self.upload_path = upload_path
         self.block_size = block_size
 
-    def setdata(
-            self,
-            data: np.array,
-            col: str, exp: str, chan: str,
-            res: int, xs: [int, int], ys: [int, int], zs: [int, int]
-        ):
+    def setdata(self, data: np.array, col: str, exp: str, chan: str, res: int,
+                xs: [int, int], ys: [int, int], zs: [int, int]):
         """
         Upload the file.
 
@@ -91,7 +82,7 @@ class FilesystemStorageManager(StorageManager):
         for f, i in zip(files, indices):
             try:
                 data_partial = self.retrieve(col, exp, chan, res, f)
-            except:
+            except Exception:
                 data_partial = np.zeros(self.block_size, dtype="uint8")
 
             data_partial[
@@ -105,11 +96,8 @@ class FilesystemStorageManager(StorageManager):
             ]
             data_partial = self.store(data_partial, col, exp, chan, res, f)
 
-    def getdata(
-            self,
-            col: str, exp: str, chan: str,
-            res: int, xs: [int, int], ys: [int, int], zs: [int, int]
-        ):
+    def getdata(self, col: str, exp: str, chan: str, res: int,
+                xs: [int, int], ys: [int, int], zs: [int, int]):
         """
         Get the data from disk.
 
@@ -152,12 +140,8 @@ class FilesystemStorageManager(StorageManager):
 
         return payload
 
-    def store(
-            self,
-            data: np.array,
-            col: str, exp: str, chan: str, res: int,
-            b: [int, int, int]
-        ):
+    def store(self, data: np.array, col: str, exp: str, chan: str, res: int,
+              b: [int, int, int]):
         """
         Store a single block file.
 
@@ -167,11 +151,11 @@ class FilesystemStorageManager(StorageManager):
 
         """
         os.makedirs("{}/{}/{}/{}/".format(
-            UPLOADS_PATH,
+            self.upload_path,
             col, exp, chan
         ), exist_ok=True)
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
-            UPLOADS_PATH,
+            self.upload_path,
             col, exp, chan,
             res,
             (b[0], b[0] + self.block_size[0]),
@@ -181,11 +165,8 @@ class FilesystemStorageManager(StorageManager):
         # print(fname)
         return np.save(fname, data)
 
-    def retrieve(
-            self,
-            col: str, exp: str, chan: str, res: int,
-            b: [int, int, int]
-        ):
+    def retrieve(self, col: str, exp: str, chan: str, res: int,
+                 b: [int, int, int]):
         """
         Pull a single block from disk.
 
@@ -193,19 +174,14 @@ class FilesystemStorageManager(StorageManager):
             bossURI
 
         """
-        if not (
-                os.path.isdir("{}/{}".format(UPLOADS_PATH, col)) and
-                os.path.isdir("{}/{}/{}".format(UPLOADS_PATH, col, exp)) and
-                os.path.isdir("{}/{}/{}/{}".format(
-                    UPLOADS_PATH, col, exp, chan
-                ))
-            ):
+        if not (os.path.isdir("{}/{}".format(self.upload_path, col)) and
+                os.path.isdir("{}/{}/{}".format(self.upload_path, col, exp)) and
+                os.path.isdir("{}/{}/{}/{}".format(self.upload_path, col, exp, chan))):
             raise IOError("{}/{}/{} not found.".format(
                 col, exp, chan
             ))
-            # return np.zeros(self.block_size, dtype="uint8")
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
-            UPLOADS_PATH,
+            self.upload_path,
             col, exp, chan,
             res,
             (b[0], b[0] + self.block_size[0]),

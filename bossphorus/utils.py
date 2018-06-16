@@ -14,15 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from .config import BLOCK_SIZE
-
-
-def file_compute(
-        x_start: int, x_stop: int,
-        y_start: int, y_stop: int,
-        z_start: int, z_stop: int,
-        block_size: [int, int, int] = BLOCK_SIZE
-    ):
+def file_compute(x_start: int, x_stop: int, y_start: int, y_stop: int,
+                 z_start: int, z_stop: int, block_size: [int, int, int]):
     """
     Compute the (possibly extant) files that would hold this volume.
 
@@ -32,8 +25,6 @@ def file_compute(
         q_start, q_stop: Bounds along Q dimension
         block_size: The block-size stored in each file
     """
-    # x
-
     x_block_origins = [
         b
         for b in range(0, x_stop + block_size[0], block_size[0])
@@ -58,11 +49,8 @@ def file_compute(
     return files
 
 
-def block_compute(
-        x_start: int, x_stop: int,
-        y_start: int, y_stop: int,
-        z_start: int, z_stop: int,
-        block_size: [int, int, int] = (256, 256, 256)):
+def block_compute(x_start: int, x_stop: int, y_start: int, y_stop: int,
+                  z_start: int, z_stop: int, block_size: [int, int, int]):
     """
     Compute the block-aligned delimiters for this volume.
 
@@ -105,12 +93,8 @@ def block_compute(
     return files
 
 
-def blockfile_indices(
-        xs: [int, int],
-        ys: [int, int],
-        zs: [int, int],
-        block_size: [int, int, int] = BLOCK_SIZE
-    ):
+def blockfile_indices(xs: [int, int], ys: [int, int], zs: [int, int],
+                      block_size: [int, int, int]):
     """
     Return the indices PER BLOCK for each file required.
 

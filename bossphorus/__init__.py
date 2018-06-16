@@ -26,15 +26,13 @@ from flask import Flask, request, Response, jsonify, make_response
 import numpy as np
 
 from .StorageManager import FilesystemStorageManager
-from .config import BLOCK_SIZE, UPLOADS_PATH
-from .utils import file_compute, blockfile_indices
 
 
 __version__ = "0.2.0"
 
 def create_app():
     app = Flask(__name__)
-    manager = FilesystemStorageManager()
+    manager = FilesystemStorageManager("./uploads", 256)
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"
