@@ -7,9 +7,11 @@ name = "pypi"
 
 [packages]
 
-flask = "*"
+Flask = "*"
 numpy = "*"
 
 
 [dev-packages]
 
+pylint = "*"
+mypy = "*"
