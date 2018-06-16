@@ -1,3 +1,4 @@
-from bossphorus import APP
+from bossphorus import create_app
 
-APP.run(host="0.0.0.0", port=5000, debug=True)
+app = create_app()
+app.run(host="0.0.0.0", port=5000, debug=True)
