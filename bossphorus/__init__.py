@@ -26,8 +26,9 @@ from flask import Flask, request, Response, jsonify, make_response
 import numpy as np
 
 from . import storagemanager
+from . import version
 
-__version__ = "0.2.0"
+__version__ = version.__version__
 
 def create_app():
     """

@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import codecs
+import os
+import re
 from setuptools import setup, find_packages
 
 """
@@ -24,7 +27,21 @@ python setup.py bdist_wheel --universal
 twine upload dist/*
 """
 
-VERSION = "0.2.0"
+def read(*parts):
+    with codecs.open(os.path.join(HERE, *parts), 'r') as fp:
+        return fp.read()
+
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    else:
+        return "UNKNOWN"
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+VERSION = find_version("bossphorus", "version.py")
 
 setup(
     name="bossphorus",
