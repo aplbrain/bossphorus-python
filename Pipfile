@@ -7,9 +7,10 @@ name = "pypi"
 
 [packages]
 
-Flask = "*"
+flask = "*"
 numpy = "*"
 blosc = "*"
+intern = "*"
 
 
 [dev-packages]
@@ -18,3 +19,6 @@ pylint = "*"
 mypy = "*"
 wheel = "*"
 twine = "*"
+jupyter = "*"
+matplotlib = "*"
+pandas = "*"

@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import bossphorus
+from bossphorus import create_app
 
-def main():
-    """Entry point for Bossphorus"""
-    app = bossphorus.create_app()
-    app.run(host="0.0.0.0", port=5000)
+app = create_app()
+app.run(host="0.0.0.0", port=5000, debug=True)

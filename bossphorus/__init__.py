@@ -30,8 +30,11 @@ from . import storagemanager
 __version__ = "0.2.0"
 
 def create_app():
+    """
+    Create a Bossphorus server app.
+    """
     app = Flask(__name__)
-    manager = storagemanager.create("./uploads", 256)
+    manager = storagemanager.create("./uploads", (256, 256, 256))
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"

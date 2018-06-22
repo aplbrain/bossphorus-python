@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
 
@@ -22,12 +21,11 @@ import numpy as np
 
 class StorageManager(ABC):
     """
-    Abstract class.
+    Abstract Class for volumetric data management.
 
     StorageManagers are responsible for shutting data in and out of a storage
-    mechanism, which may be a filesystem (such as FileSystemStorageManager) or
-    a remote resource, such as AWS S3 or even another bossphorus.
-
+    mechanism, which may be a filesystem or a remote resource, such as AWS S3
+    or even another bossphorus.
     """
 
     @abstractmethod
