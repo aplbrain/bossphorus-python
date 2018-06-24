@@ -51,7 +51,7 @@ setup(
     description="Baby bossDB",
     license="Apache 2.0",
     keywords="bossDB neuroscience volumetric datastore database",
-    url="https://github.com/aplbran/bossphorus/tarball/" + VERSION,
+    url="https://github.com/aplbrain/bossphorus/tarball/" + VERSION,
     packages=find_packages(),
     install_requires=[
         "blosc",
