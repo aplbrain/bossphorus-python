@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
 
@@ -18,22 +17,8 @@ limitations under the License.
 import os
 import numpy as np
 
-from .config import BLOCK_SIZE, UPLOADS_PATH
+from .StorageManager import StorageManager
 from .utils import file_compute, blockfile_indices
-
-
-class StorageManager:
-    """
-    Abstract class.
-
-    StorageManagers are responsible for shutting data in and out of a storage
-    mechanism, which may be a filesystem (such as FileSystemStorageManager) or
-    a remote resource, such as AWS S3 or even another bossphorus.
-
-    """
-
-    pass
-
 
 class FilesystemStorageManager(StorageManager):
     """
@@ -42,27 +27,19 @@ class FilesystemStorageManager(StorageManager):
     Contains logic for reading and writing to local filesystem.
     """
 
-    def __init__(
-            self,
-            upload_path: str = UPLOADS_PATH,
-            block_size: [int, int, int] = BLOCK_SIZE
-        ):
+    def __init__(self, storage_path: str, block_size: [int, int, int]):
         """
         Create a new FileSystemStorageManager.
 
         Arguments:
-            upload_path: Where to store the data tree
+            storage_path: Where to store the data tree
             block_size: How much data should go in each file
         """
-        self.upload_path = upload_path
+        self.storage_path = storage_path
         self.block_size = block_size
 
-    def setdata(
-            self,
-            data: np.array,
-            col: str, exp: str, chan: str,
-            res: int, xs: [int, int], ys: [int, int], zs: [int, int]
-        ):
+    def setdata(self, data: np.array, col: str, exp: str, chan: str, res: int,
+                xs: [int, int], ys: [int, int], zs: [int, int]):
         """
         Upload the file.
 
@@ -82,7 +59,7 @@ class FilesystemStorageManager(StorageManager):
         for f, i in zip(files, indices):
             try:
                 data_partial = self.retrieve(col, exp, chan, res, f)
-            except:
+            except Exception:
                 data_partial = np.zeros(self.block_size, dtype="uint8")
 
             data_partial[
@@ -96,11 +73,8 @@ class FilesystemStorageManager(StorageManager):
             ]
             data_partial = self.store(data_partial, col, exp, chan, res, f)
 
-    def getdata(
-            self,
-            col: str, exp: str, chan: str,
-            res: int, xs: [int, int], ys: [int, int], zs: [int, int]
-        ):
+    def getdata(self, col: str, exp: str, chan: str, res: int,
+                xs: [int, int], ys: [int, int], zs: [int, int]):
         """
         Get the data from disk.
 
@@ -143,12 +117,8 @@ class FilesystemStorageManager(StorageManager):
 
         return payload
 
-    def store(
-            self,
-            data: np.array,
-            col: str, exp: str, chan: str, res: int,
-            b: [int, int, int]
-        ):
+    def store(self, data: np.array, col: str, exp: str, chan: str, res: int,
+              b: [int, int, int]):
         """
         Store a single block file.
 
@@ -158,25 +128,21 @@ class FilesystemStorageManager(StorageManager):
 
         """
         os.makedirs("{}/{}/{}/{}/".format(
-            UPLOADS_PATH,
+            self.storage_path,
             col, exp, chan
         ), exist_ok=True)
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
-            UPLOADS_PATH,
+            self.storage_path,
             col, exp, chan,
             res,
             (b[0], b[0] + self.block_size[0]),
             (b[1], b[1] + self.block_size[1]),
             (b[2], b[2] + self.block_size[2]),
         )
-        # print(fname)
         return np.save(fname, data)
 
-    def retrieve(
-            self,
-            col: str, exp: str, chan: str, res: int,
-            b: [int, int, int]
-        ):
+    def retrieve(self, col: str, exp: str, chan: str, res: int,
+                 b: [int, int, int]):
         """
         Pull a single block from disk.
 
@@ -184,19 +150,14 @@ class FilesystemStorageManager(StorageManager):
             bossURI
 
         """
-        if not (
-                os.path.isdir("{}/{}".format(UPLOADS_PATH, col)) and
-                os.path.isdir("{}/{}/{}".format(UPLOADS_PATH, col, exp)) and
-                os.path.isdir("{}/{}/{}/{}".format(
-                    UPLOADS_PATH, col, exp, chan
-                ))
-            ):
+        if not (os.path.isdir("{}/{}".format(self.storage_path, col)) and
+                os.path.isdir("{}/{}/{}".format(self.storage_path, col, exp)) and
+                os.path.isdir("{}/{}/{}/{}".format(self.storage_path, col, exp, chan))):
             raise IOError("{}/{}/{} not found.".format(
                 col, exp, chan
             ))
-            # return np.zeros(self.block_size, dtype="uint8")
         fname = "{}/{}/{}/{}/{}-{}-{}-{}.npy".format(
-            UPLOADS_PATH,
+            self.storage_path,
             col, exp, chan,
             res,
             (b[0], b[0] + self.block_size[0]),
@@ -204,3 +165,4 @@ class FilesystemStorageManager(StorageManager):
             (b[2], b[2] + self.block_size[2]),
         )
         return np.load(fname)
+    

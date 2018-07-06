@@ -14,7 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-UPLOADS_PATH = "./uploads"
-BLOCK_SIZE = (256, 256, 256)
-# UPLOADS_PATH: str = "./uploads"
-# BLOCK_SIZE: [int, int, int] = (256, 256, 256)
+import bossphorus
+
+def main():
+    """Entry point for Bossphorus"""
+    app = bossphorus.create_app()
+    app.run(host="0.0.0.0", port=5000)
