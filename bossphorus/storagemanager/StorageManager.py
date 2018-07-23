@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 import numpy as np
 
@@ -29,11 +30,22 @@ class StorageManager(ABC):
     """
 
     @abstractmethod
-    def getdata(self, col: str, exp: str, chan: str,
-                res: int, xs: [int, int], ys: [int, int], zs: [int, int]):
-        pass
+    def getdata(
+            self, col: str, exp: str, chan: str, res: int,
+            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+    ):
+        ...
 
     @abstractmethod
-    def setdata(self, data: np.array, col: str, exp: str, chan: str,
-                res: int, xs: [int, int], ys: [int, int], zs: [int, int]):
-        pass
+    def hasdata(
+            self, col: str, exp: str, chan: str, res: int,
+            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+    ):
+        ...
+
+    @abstractmethod
+    def setdata(
+            self, data: np.array, col: str, exp: str, chan: str, res: int,
+            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+    ):
+        ...
