@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from typing import Tuple
 
 import os
 import numpy as np
@@ -39,7 +40,7 @@ class FilesystemStorageManager(StorageManager):
         self.block_size = block_size
 
     def setdata(self, data: np.array, col: str, exp: str, chan: str, res: int,
-                xs: [int, int], ys: [int, int], zs: [int, int]):
+                xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]):
         """
         Upload the file.
 
@@ -74,7 +75,7 @@ class FilesystemStorageManager(StorageManager):
             data_partial = self.store(data_partial, col, exp, chan, res, f)
 
     def getdata(self, col: str, exp: str, chan: str, res: int,
-                xs: [int, int], ys: [int, int], zs: [int, int]):
+                xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]):
         """
         Get the data from disk.
 
@@ -118,7 +119,7 @@ class FilesystemStorageManager(StorageManager):
         return payload
 
     def store(self, data: np.array, col: str, exp: str, chan: str, res: int,
-              b: [int, int, int]):
+              b: Tuple[int, int, int]):
         """
         Store a single block file.
 
@@ -142,7 +143,7 @@ class FilesystemStorageManager(StorageManager):
         return np.save(fname, data)
 
     def retrieve(self, col: str, exp: str, chan: str, res: int,
-                 b: [int, int, int]):
+                 b: Tuple[int, int, int]):
         """
         Pull a single block from disk.
 
@@ -165,4 +166,3 @@ class FilesystemStorageManager(StorageManager):
             (b[2], b[2] + self.block_size[2]),
         )
         return np.load(fname)
-    
