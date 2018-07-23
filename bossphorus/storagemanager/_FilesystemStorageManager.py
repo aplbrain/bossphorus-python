@@ -28,7 +28,10 @@ class FilesystemStorageManager(StorageManager):
     Contains logic for reading and writing to local filesystem.
     """
 
-    def __init__(self, storage_path: str, block_size: [int, int, int]):
+    def __init__(
+            self, storage_path: str, block_size: Tuple[int, int, int],
+            is_terminal=True
+    ):
         """
         Create a new FileSystemStorageManager.
 
@@ -36,8 +39,17 @@ class FilesystemStorageManager(StorageManager):
             storage_path: Where to store the data tree
             block_size: How much data should go in each file
         """
+        self.is_terminal = True
         self.storage_path = storage_path
         self.block_size = block_size
+
+    def hasdata(
+            self, col: str, exp: str, chan: str, res: int,
+            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+    ):
+        # TODO: Should know when it has data and return false even if it's
+        # in terminal mode
+        return self.is_terminal
 
     def setdata(self, data: np.array, col: str, exp: str, chan: str, res: int,
                 xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]):
