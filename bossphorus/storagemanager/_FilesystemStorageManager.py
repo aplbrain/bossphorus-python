@@ -39,7 +39,7 @@ class FilesystemStorageManager(StorageManager):
             storage_path: Where to store the data tree
             block_size: How much data should go in each file
         """
-        self.is_terminal = True
+        self.is_terminal = is_terminal
         self.storage_path = storage_path
         self.block_size = block_size
 
