@@ -196,3 +196,8 @@ venv.bak/
 
 
 # End of https://www.gitignore.io/api/node,code,macos,python
+
+### bossphorus ###
+
+# Ensure no upload testing results are commited
+uploads/
