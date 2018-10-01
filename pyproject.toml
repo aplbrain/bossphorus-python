@@ -2,7 +2,7 @@
 name = "bossphorus"
 version = "0.3.0"
 description = "Baby bossDB"
-authors = ["Jordan Matelsky <jordan.matelsky.jhuapl.edu", "Miller Wilt <miller.wilt@jhuapl.edu>"]
+authors = ["Jordan Matelsky <jordan.matelsky.jhuapl.edu>", "Miller Wilt <miller.wilt@jhuapl.edu>"]
 license = "Apache-2.0"
 readme = "README.md"
 
@@ -21,3 +21,6 @@ matplotlib = "^3.0"
 pandas = "^0.23.4"
 autopep8 = "^1.4"
 pydocstyle = "^2.1"
+
+[tool.poetry.scripts]
+bossphorus = "bossphorus.__main__:main"
