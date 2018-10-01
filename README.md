@@ -92,10 +92,10 @@ The primary advantage of *bossphorus* is that it uses an identical API to that o
 
 ## Alternatives
 
-| Project | Description |
-|---------|-------------|
-| [bossDB](https://bossdb.org) | Petabyte-scale, Cloud-Native Volumetric Database |
-| [DVID](https://github.com/janelia-flyem/dvid) | Distributed, Versioned, Image-oriented Dataservice
+| Project | Description | If you want... |
+|---------|-------------|----------------|
+| [bossDB](https://bossdb.org) | Petabyte-scale, Cloud-Native Volumetric Database | ...faster IO speed and infinite scalability |
+| [DVID](https://github.com/janelia-flyem/dvid) | Distributed, Versioned, Image-oriented Dataservice | ...versioned data |
 
 
 ## Contributing
