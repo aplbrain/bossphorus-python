@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "bossphorus"
+version = "0.3.0"
+description = "Baby bossDB"
+authors = ["Miller Wilt <miller.wilt@jhuapl.edu>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+blosc = "^1.5"
+flask = "^1.0"
+numpy = "^1.15"
+
+[tool.poetry.dev-dependencies]
