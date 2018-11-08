@@ -31,7 +31,7 @@ class FilesystemStorageManager(StorageManager):
     def __init__(
             self, storage_path: str, block_size: Tuple[int, int, int],
             is_terminal=True
-    ):
+    ) -> None:
         """
         Create a new FileSystemStorageManager.
 
