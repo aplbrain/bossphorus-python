@@ -26,8 +26,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
                 name: Lint bossphorus
                 command: |
