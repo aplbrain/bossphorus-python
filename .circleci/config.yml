@@ -21,19 +21,19 @@ jobs:
                 key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
                     - "/home/circleci/project/bossphorus/bossphorus/venv"
-    lint_bossphorus:
-        docker:
-            - image: circleci/python:3.7.1
-        steps:
-            - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
-            - run:
-                name: Lint bossphorus
-                command: |
-                    cd bossphorus
-                    . venv/bin/activate
-                    python3 -m pylint .
+    # lint_bossphorus:
+    #     docker:
+    #         - image: circleci/python:3.7.1
+    #     steps:
+    #         - checkout
+    #         - restore_cache:
+    #             key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+    #         - run:
+    #             name: Lint bossphorus
+    #             command: |
+    #                 cd bossphorus
+    #                 . venv/bin/activate
+    #                 python3 -m pylint .
     test_bossphorus:
         docker:
             - image: circleci/python:3.7.1
@@ -44,7 +44,9 @@ jobs:
             - run:
                 name: Test bossphorus (pytest)
                 command: |
+                    ls
                     cd bossphorus
+                    ls
                     . venv/bin/activate
                     python3 -m pytest .
     # build_marmara:
@@ -98,9 +100,9 @@ workflows:
     test_all:
         jobs:
             - build_bossphorus
-            - lint_bossphorus:
-                requires:
-                    - build_bossphorus
+            # - lint_bossphorus:
+            #     requires:
+            #         - build_bossphorus
             - test_bossphorus:
                 requires:
                     - build_bossphorus
