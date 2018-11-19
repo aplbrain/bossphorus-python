@@ -8,6 +8,7 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
+            - pip3 install -U pytest
     test_api:
         docker:
             - image: circleci/python:3.7.1
