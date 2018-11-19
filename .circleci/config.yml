@@ -22,4 +22,6 @@ workflows:
     test_all:
         jobs:
             - build_api
-            - test_api
+            - test_api:
+                requires:
+                    - build_api
