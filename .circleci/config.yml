@@ -31,7 +31,7 @@ jobs:
                 name: Lint bossphorus
                 command: |
                     . bvenv/bin/activate
-                    python3 -m pylint bossphorus
+                    python -m pylint bossphorus
     bossphorus_test:
         docker:
             - image: circleci/python:3.7.1
@@ -43,7 +43,7 @@ jobs:
                 name: Test bossphorus (pytest)
                 command: |
                     . bvenv/bin/activate
-                    python3 -m pytest bossphorus
+                    python -m pytest bossphorus
 
     marmara_build:
         docker:
@@ -73,7 +73,7 @@ jobs:
                 name: Lint marmara
                 command: |
                     . mvenv/bin/activate
-                    python3 -m pylint marmara
+                    python -m pylint marmara
     marmara_test:
         docker:
             - image: circleci/python:3.7.1
@@ -85,7 +85,7 @@ jobs:
                 name: Test marmara (pytest)
                 command: |
                     . mvenv/bin/activate
-                    python3 -m pytest marmara
+                    python -m pytest marmara
 
 workflows:
     version: 2
