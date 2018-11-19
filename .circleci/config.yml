@@ -8,6 +8,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
+            - restore_cache:
+                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run: python3 -m pylint bossphorus
     build_bossphorus:
         docker:
@@ -31,6 +33,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
+            - restore_cache:
+                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run: python3 -m pytest bossphorus
 workflows:
     version: 2
