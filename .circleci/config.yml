@@ -3,7 +3,7 @@
 
 version: 2
 jobs:
-    build_bossphorus:
+    bossphorus_build:
         docker:
             - image: circleci/python:3.7.1
         steps:
@@ -20,7 +20,7 @@ jobs:
                 key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
                     - "bvenv"
-    lint_bossphorus:
+    bossphorus_lint:
         docker:
             - image: circleci/python:3.7.1
         steps:
@@ -45,7 +45,7 @@ jobs:
                     . bvenv/bin/activate
                     python3 -m pytest bossphorus
 
-    build_marmara:
+    marmara_build:
         docker:
             - image: circleci/python:3.7.1
         steps:
@@ -62,7 +62,7 @@ jobs:
                 key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
                 paths:
                     - "mvenv"
-    lint_marmara:
+    marmara_lint:
         docker:
             - image: circleci/python:3.7.1
         steps:
@@ -91,23 +91,23 @@ workflows:
     version: 2
     test_all:
         jobs:
-            - build_bossphorus
-            - lint_bossphorus:
+            - bossphorus_build
+            - bossphorus_lint:
                 requires:
-                    - build_bossphorus
+                    - bossphorus_build
             - test_bossphorus:
                 requires:
-                    - build_bossphorus
-            - build_marmara
-            - lint_marmara:
+                    - bossphorus_build
+            - marmara_build
+            - marmara_lint:
                 requires:
-                    - build_marmara
+                    - marmara_build
             - test_marmara:
                 requires:
-                    - build_marmara
+                    - marmara_build
             - collect_artifacts:
                 requires:
-                    - build_bossphorus
-                    - lint_bossphorus
-                    - build_marmara
-                    - lint_marmara
+                    - bossphorus_build
+                    - bossphorus_lint
+                    - marmara_build
+                    - marmara_lint
