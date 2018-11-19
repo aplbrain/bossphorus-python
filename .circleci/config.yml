@@ -8,14 +8,14 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - run: pip3 install --user pytest
+            - run: pip3 install pytest
             - run: pytest bossphorus
     test_marmara:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - run: pip3 install --user pytest
+            - run: pip3 install pytest
             - run: pytest marmara
 workflows:
     version: 2
