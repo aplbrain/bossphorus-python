@@ -8,14 +8,24 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - run: pip3 install --user pylint
             - run: python3 -m pylint bossphorus
     build_bossphorus:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - run: pip3 install --user pytest
+            - restore_cache:
+                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+            - run:
+                name: Install dependencies
+                command: |
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r bossphorus/requirements.txt
+            - save_cache:
+                key: deps1-{{ .Branch }}-{{ checksum "requirements/dev.txt" }}
+                paths:
+                    - "venv"
     test_bossphorus:
         docker:
             - image: circleci/python:3.7.1
@@ -26,8 +36,10 @@ workflows:
     version: 2
     test_all:
         jobs:
-            - lint_bossphorus
             - build_bossphorus
+            - lint_bossphorus:
+                requires:
+                    - build_bossphorus
             - test_bossphorus:
                 requires:
                     - build_bossphorus
