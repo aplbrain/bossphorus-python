@@ -30,9 +30,8 @@ jobs:
             - run:
                 name: Lint bossphorus
                 command: |
-                    cd bossphorus
                     . bvenv/bin/activate
-                    python3 -m pylint .
+                    python3 -m pylint bossphorus
     test_bossphorus:
         docker:
             - image: circleci/python:3.7.1
@@ -45,52 +44,49 @@ jobs:
                 command: |
                     . bvenv/bin/activate
                     python3 -m pytest bossphorus
-    # build_marmara:
-    #     docker:
-    #         - image: circleci/python:3.7.1
-    #     steps:
-    #         - checkout
-    #         - restore_cache:
-    #             key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
-    #         - run:
-    #             name: Install dependencies
-    #             command: |
-    #                 cd marmara
-    #                 python3 -m venv marmara_venv
-    #                 . marmara_venv/bin/activate
-    #                 pip install -r requirements.txt
-    #         - save_cache:
-    #             key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
-    #             paths:
-    #                 - "marmara_venv"
-    # lint_marmara:
-    #     docker:
-    #         - image: circleci/python:3.7.1
-    #     steps:
-    #         - checkout
-    #         - restore_cache:
-    #             key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
-    #         - run:
-    #             name: Lint marmara
-    #             command: |
-    #                 cd marmara
-    #                 . marmara_venv/bin/activate
-    #                 python3 -m pylint .
-    # test_marmara:
-    #     docker:
-    #         - image: circleci/python:3.7.1
-    #     steps:
-    #         - checkout
-    #         - restore_cache:
-    #             key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
-    #         - run:
-    #             name: Test marmara (pytest)
-    #             command: |
-    #                 ls
-    #                 cd marmara
-    #                 ls
-    #                 . marmara_venv/bin/activate
-    #                 python3 -m pytest .
+
+    build_marmara:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
+            - restore_cache:
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            - run:
+                name: Install dependencies
+                command: |
+                    python3 -m venv mvenv
+                    . mvenv/bin/activate
+                    pip install -r marmara/requirements.txt
+            - save_cache:
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+                paths:
+                    - "mvenv"
+    lint_marmara:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
+            - restore_cache:
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            - run:
+                name: Lint marmara
+                command: |
+                    . mvenv/bin/activate
+                    python3 -m pylint marmara
+    test_marmara:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
+            - restore_cache:
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            - run:
+                name: Test marmara (pytest)
+                command: |
+                    . mvenv/bin/activate
+                    python3 -m pytest marmara
+
 workflows:
     version: 2
     test_all:
@@ -102,16 +98,16 @@ workflows:
             - test_bossphorus:
                 requires:
                     - build_bossphorus
-            # - build_marmara
-            # - lint_marmara:
-            #     requires:
-            #         - build_marmara
-            # - test_marmara:
-            #     requires:
-            #         - build_marmara
-            # - collect_artifacts:
-            #     requires:
-            #         - build_bossphorus
-            #         - lint_bossphorus
-            #         - build_marmara
-            #         - lint_marmara
+            - build_marmara
+            - lint_marmara:
+                requires:
+                    - build_marmara
+            - test_marmara:
+                requires:
+                    - build_marmara
+            - collect_artifacts:
+                requires:
+                    - build_bossphorus
+                    - lint_bossphorus
+                    - build_marmara
+                    - lint_marmara
