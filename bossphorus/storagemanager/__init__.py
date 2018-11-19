@@ -16,7 +16,8 @@ limitations under the License.
 
 from .StorageManager import StorageManager
 
-def create(storage_path: str, block_size: [int, int, int]) -> StorageManager:
+
+def create(storage_path: str, block_size: [int, int, int], is_terminal: bool=False) -> StorageManager:
     """
     Create a StorageManager instance.
 
@@ -31,4 +32,4 @@ def create(storage_path: str, block_size: [int, int, int]) -> StorageManager:
     """
     from ._FilesystemStorageManager import FilesystemStorageManager
 
-    return FilesystemStorageManager(storage_path, block_size)
+    return FilesystemStorageManager(storage_path, block_size, is_terminal=is_terminal)

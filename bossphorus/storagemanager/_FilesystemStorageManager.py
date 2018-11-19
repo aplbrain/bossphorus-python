@@ -31,7 +31,7 @@ class FilesystemStorageManager(StorageManager):
     def __init__(
             self, storage_path: str, block_size: Tuple[int, int, int],
             is_terminal=True
-    ):
+    ) -> None:
         """
         Create a new FileSystemStorageManager.
 
@@ -123,9 +123,9 @@ class FilesystemStorageManager(StorageManager):
                     i[2][0]:i[2][1],
                 ]
             payload[
-                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
             ] = data_partial
 
         return payload
