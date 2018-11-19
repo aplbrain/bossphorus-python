@@ -3,23 +3,15 @@
 
 version: 2
 jobs:
-    test_bossphorus:
+    build:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - run: pip3 install pytest
+            - run: pip3 install --user pytest
             - run: pytest bossphorus
-    test_marmara:
-        docker:
-            - image: circleci/python:3.7.1
-        steps:
-            - checkout
-            - run: pip3 install pytest
-            - run: pytest marmara
 workflows:
     version: 2
     test_all:
         jobs:
-            - test_bossphorus
-            - test_marmara
+            - build
