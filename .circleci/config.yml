@@ -16,7 +16,7 @@ jobs:
                     cd bossphorus
                     python3 -m venv venv
                     . venv/bin/activate
-                    pip install -r bossphorus/requirements.txt
+                    pip install -r requirements.txt
             - save_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
@@ -60,7 +60,7 @@ jobs:
                     cd marmara
                     python3 -m venv venv
                     . venv/bin/activate
-                    pip install -r marmara/requirements.txt
+                    pip install -r requirements.txt
             - save_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
                 paths:
