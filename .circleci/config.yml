@@ -23,7 +23,7 @@ jobs:
                     . venv/bin/activate
                     pip install -r bossphorus/requirements.txt
             - save_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "requirements/dev.txt" }}
+                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
                     - "venv"
     test_bossphorus:
