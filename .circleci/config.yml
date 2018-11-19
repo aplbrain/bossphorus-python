@@ -9,7 +9,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
                 name: Install dependencies
                 command: |
@@ -17,7 +17,7 @@ jobs:
                     . bvenv/bin/activate
                     pip install -r bossphorus/requirements.txt
             - save_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
                     - "bvenv"
     # lint_bossphorus:
@@ -39,7 +39,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
                 name: Test bossphorus (pytest)
                 command: |
