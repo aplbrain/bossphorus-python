@@ -3,15 +3,15 @@
 
 version: 2
 jobs:
-    build:
+    build_bossphorus:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
             - run: pip3 install --user pytest
-            - run: pytest bossphorus
+            - run: python3 -m pytest bossphorus
 workflows:
     version: 2
     test_all:
         jobs:
-            - build
+            - build_bossphorus
