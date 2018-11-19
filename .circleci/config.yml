@@ -3,15 +3,31 @@
 
 version: 2
 jobs:
+    lint_bossphorus:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
+            - run: pip3 install --user pylint
+            - run: python3 -m pylint bossphorus
     build_bossphorus:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
             - run: pip3 install --user pytest
+    test_bossphorus:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
             - run: python3 -m pytest bossphorus
 workflows:
     version: 2
     test_all:
         jobs:
+            - lint_bossphorus
             - build_bossphorus
+            - test_bossphorus:
+                requires:
+                    - build_bossphorus
