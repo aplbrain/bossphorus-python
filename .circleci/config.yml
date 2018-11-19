@@ -13,13 +13,13 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
-                    cd bossphorus && python3 -m venv venv
-                    . venv/bin/activate
+                    cd bossphorus && python3 -m venv bossphorus_venv
+                    . bossphorus_venv/bin/activate
                     pip install -r requirements.txt
             - save_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
-                    - "bossphorus/venv"
+                    - "bossphorus_venv"
     lint_bossphorus:
         docker:
             - image: circleci/python:3.7.1
@@ -32,7 +32,7 @@ jobs:
                 command: |
                     cd bossphorus
                     echo `pwd`
-                    . venv/bin/activate
+                    . bossphorus_venv/bin/activate
                     python3 -m pylint .
     test_bossphorus:
         docker:
@@ -45,7 +45,7 @@ jobs:
                 name: Test bossphorus (pytest)
                 command: |
                     cd bossphorus
-                    . venv/bin/activate
+                    . bossphorus_venv/bin/activate
                     python3 -m pytest .
     build_marmara:
         docker:
@@ -57,13 +57,14 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
-                    cd marmara && python3 -m venv venv
-                    . venv/bin/activate
+                    cd marmara
+                    python3 -m venv marmara_venv
+                    . marmara_venv/bin/activate
                     pip install -r requirements.txt
             - save_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
                 paths:
-                    - "marmara/venv"
+                    - "marmara_venv"
     lint_marmara:
         docker:
             - image: circleci/python:3.7.1
@@ -75,7 +76,7 @@ jobs:
                 name: Lint marmara
                 command: |
                     cd marmara
-                    . venv/bin/activate
+                    . marmara_venv/bin/activate
                     python3 -m pylint .
     test_marmara:
         docker:
@@ -90,7 +91,7 @@ jobs:
                     ls
                     cd marmara
                     ls
-                    . venv/bin/activate
+                    . marmara_venv/bin/activate
                     python3 -m pytest .
 workflows:
     version: 2
