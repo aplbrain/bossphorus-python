@@ -20,7 +20,7 @@ jobs:
             - save_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
                 paths:
-                    - "/home/circleci/project/bossphorus/bossphorus/venv"
+                    - "bvenv"
     # lint_bossphorus:
     #     docker:
     #         - image: circleci/python:3.7.1
