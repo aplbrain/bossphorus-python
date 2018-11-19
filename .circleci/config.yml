@@ -32,7 +32,7 @@ jobs:
                 command: |
                     . bvenv/bin/activate
                     python3 -m pylint bossphorus
-    test_bossphorus:
+    bossphorus_test:
         docker:
             - image: circleci/python:3.7.1
         steps:
@@ -74,7 +74,7 @@ jobs:
                 command: |
                     . mvenv/bin/activate
                     python3 -m pylint marmara
-    test_marmara:
+    marmara_test:
         docker:
             - image: circleci/python:3.7.1
         steps:
@@ -95,14 +95,14 @@ workflows:
             - bossphorus_lint:
                 requires:
                     - bossphorus_build
-            - test_bossphorus:
+            - bossphorus_test:
                 requires:
                     - bossphorus_build
             - marmara_build
             - marmara_lint:
                 requires:
                     - marmara_build
-            - test_marmara:
+            - marmara_test:
                 requires:
                     - marmara_build
             - collect_artifacts:
