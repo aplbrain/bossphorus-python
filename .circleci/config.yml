@@ -11,10 +11,10 @@ jobs:
             - restore_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
-                name: "Lint bossphorus"
+                name: Lint bossphorus
                 command: |
-                . venv/bin/activate
-                python3 -m pylint bossphorus
+                    . venv/bin/activate
+                    python3 -m pylint bossphorus
     build_bossphorus:
         docker:
             - image: circleci/python:3.7.1
@@ -40,10 +40,10 @@ jobs:
             - restore_cache:
                 key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
-                name: "Test bossphorus (pytest)"
+                name: Test bossphorus (pytest)
                 command: |
-                . venv/bin/activate
-                python3 -m pytest bossphorus
+                    . venv/bin/activate
+                    python3 -m pytest bossphorus
 workflows:
     version: 2
     test_all:
