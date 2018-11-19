@@ -13,8 +13,9 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - run: pytest
-
+            - run:
+                name: Run pytest
+                command: pytest bossphorus
 workflows:
     version: 2
     test_all:
