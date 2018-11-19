@@ -1,0 +1,23 @@
+# bossphorus Continuous Integration.
+# Uses [workflows](https://circleci.com/docs/2.0/workflows/)
+
+version: 2
+jobs:
+    build_api:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
+    test_api:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
+            - run: pytest
+
+workflows:
+    version: 2
+    test_all:
+        jobs:
+            - build_api
+            - test_api
