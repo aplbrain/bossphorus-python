@@ -8,8 +8,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
                 name: Install dependencies
                 command: |
@@ -17,17 +17,17 @@ jobs:
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install -r requirements.txt
-            - save_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
-                paths:
-                    - "bossphorus/venv"
+            # - save_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+            #     paths:
+            #         - "bossphorus/venv"
     lint_bossphorus:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
                 name: Lint bossphorus
                 command: |
@@ -40,8 +40,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
             - run:
                 name: Test bossphorus (pytest)
                 command: |
@@ -53,8 +53,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
             - run:
                 name: Install dependencies
                 command: |
@@ -62,17 +62,17 @@ jobs:
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install -r requirements.txt
-            - save_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
-                paths:
-                    - "marmara/venv"
+            # - save_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            #     paths:
+            #         - "marmara/venv"
     lint_marmara:
         docker:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
             - run:
                 name: Lint marmara
                 command: |
@@ -84,8 +84,8 @@ jobs:
             - image: circleci/python:3.7.1
         steps:
             - checkout
-            - restore_cache:
-                key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+            # - restore_cache:
+            #     key: deps1-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
             - run:
                 name: Test marmara (pytest)
                 command: |
