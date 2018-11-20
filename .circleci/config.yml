@@ -3,6 +3,11 @@
 
 version: 2
 jobs:
+    prepare:
+        docker:
+            - image: circleci/python:3.7.1
+        steps:
+            - checkout
     bossphorus_build:
         docker:
             - image: circleci/python:3.7.1
@@ -91,14 +96,19 @@ workflows:
     version: 2
     test_all:
         jobs:
-            - bossphorus_build
+            - prepare
+            - bossphorus_build:
+                requires:
+                    - prepare
             - bossphorus_lint:
                 requires:
                     - bossphorus_build
             - bossphorus_test:
                 requires:
                     - bossphorus_build
-            - marmara_build
+            - marmara_build:
+                requires:
+                    - prepare
             - marmara_lint:
                 requires:
                     - marmara_build
