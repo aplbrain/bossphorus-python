@@ -107,7 +107,7 @@ workflows:
                     - marmara_build
             - collect_artifacts:
                 requires:
-                    - bossphorus_build
+                    - bossphorus_test
                     - bossphorus_lint
-                    - marmara_build
+                    - marmara_test
                     - marmara_lint
