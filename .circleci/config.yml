@@ -38,6 +38,7 @@ jobs:
                 name: Lint bossphorus
                 command: |
                     . bvenv/bin/activate
+                    cd bossphorus
                     python -m pylint bossphorus
     bossphorus_test:
         docker:
@@ -82,6 +83,7 @@ jobs:
                 name: Lint marmara
                 command: |
                     . mvenv/bin/activate
+                    cd marmara
                     python -m pylint marmara
     marmara_test:
         docker:
