@@ -13,6 +13,7 @@ attrs = "^18.2"
 typing = "^3.6"
 typing-extensions = "^3.6"
 pylint = "^2.1"
+pyzmq = "^17.1"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.1"
