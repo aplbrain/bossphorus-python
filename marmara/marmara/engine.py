@@ -18,7 +18,7 @@ class StorageEngine(Protocol):
     data are stored.
     """
 
-    def get(self, coord: CutoutCoordinateFrame) -> np.array:
+    def get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         """
         Retrieve data from a given `CutoutCoordinateFrame`.
 
@@ -26,7 +26,7 @@ class StorageEngine(Protocol):
             coord (marmara.CutoutCoordinateFrame): The cutout to request
 
         Returns:
-            nd.array: Data in XYZ (?) format
+            np.ndarray: Data in XYZ (?) format
 
         Raises:
             IndexError: If the cutout cannot be made from the Resource.
@@ -50,7 +50,7 @@ class StorageEngine(Protocol):
         """
         ...
 
-    def put(self, coord: CutoutCoordinateFrame, data: np.array) -> None:
+    def put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         """
         Post data to the storage engine.
 
@@ -59,7 +59,7 @@ class StorageEngine(Protocol):
 
         Arguments:
             coord (marmara.CutoutCoordinateFrame): The cutout to request.
-            data (np.array): The XYZ-order 3D data to post.
+            data (np.ndarray): The XYZ-order 3D data to post.
 
         Returns:
             None
@@ -75,7 +75,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
     def __init__(self, next_layer: StorageEngine = None) -> None:
         self.next_layer = next_layer
 
-    def get(self, coord: CutoutCoordinateFrame) -> np.array:
+    def get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         """
         Retrieve data from a given `CutoutCoordinateFrame`.
 
@@ -83,7 +83,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
             coord (marmara.CutoutCoordinateFrame): The cutout to request
 
         Returns:
-            nd.array: Data in XYZ (?) format
+            np.ndarray: Data in XYZ (?) format
 
         Raises:
             IndexError: If the cutout cannot be made from the Resource.
@@ -98,7 +98,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
                 raise e
 
     @abstractmethod
-    def _get(self, coord: CutoutCoordinateFrame) -> np.array:
+    def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         ...
 
     def has(self, coord: CutoutCoordinateFrame) -> bool:
@@ -127,7 +127,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
     def _has(self, coord: CutoutCoordinateFrame) -> bool:
         ...
 
-    def put(self, coord: CutoutCoordinateFrame, data: np.array) -> None:
+    def put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         """
         Post data to the storage engine.
 
@@ -136,7 +136,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
 
         Arguments:
             coord (marmara.CutoutCoordinateFrame): The cutout to request.
-            data (np.array): The XYZ-order 3D data to post.
+            data (np.ndarray): The XYZ-order 3D data to post.
 
         Returns:
             None
@@ -155,7 +155,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
                 raise e
 
     @abstractmethod
-    def _put(self, coord: CutoutCoordinateFrame, data: np.array) -> None:
+    def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         ...
 
 class InMemoryNumpyStorageEngine(AbstractStorageLayer):
@@ -166,11 +166,11 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
     writing tests or prototyping small data.
     """
 
-    def __init__(self, data: np.array, next_layer: StorageEngine = None) -> None:
+    def __init__(self, data: np.ndarray, next_layer: StorageEngine = None) -> None:
         super().__init__(next_layer)
         self.data = data
 
-    def _get(self, coord: CutoutCoordinateFrame) -> np.array:
+    def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         """
         Get data from the cutout.
         """
@@ -193,7 +193,7 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
             (coord.zs[0] <= self.data.shape[2] and coord.zs[1] <= self.data.shape[2])
         )
 
-    def _put(self, coord: CutoutCoordinateFrame, data: np.array) -> None:
+    def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         """
         """
         self.data[
@@ -212,7 +212,7 @@ class BossStorageEngine(AbstractStorageLayer):
         super().__init__(next_layer)
         self.remote = remote
 
-    def _get(self, coord: CutoutCoordinateFrame) -> np.array:
+    def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         return self.remote.get_cutout(
             self.remote.get_channel(coord.channel, coord.collection, coord.experiment),
             coord.resolution, coord.xs, coord.ys, coord.zs,
@@ -243,7 +243,7 @@ class BossStorageEngine(AbstractStorageLayer):
         except Exception as e:
             return False
 
-    def _put(self, coord: CutoutCoordinateFrame, data: np.array) -> None:
+    def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         self.remote.post_cutout(
             self.remote.get_channel(coord.channel, coord.collection, coord.experiment),
             coord.resolution, coord.xs, coord.ys, coord.zs, data,
