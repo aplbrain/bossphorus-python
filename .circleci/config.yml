@@ -21,6 +21,7 @@ jobs:
                     python3 -m venv bvenv
                     . bvenv/bin/activate
                     pip install poetry
+                    cd bossphorus
                     poetry install
             - save_cache:
                 key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
@@ -64,6 +65,7 @@ jobs:
                     python3 -m venv mvenv
                     . mvenv/bin/activate
                     pip install poetry
+                    cd marmara
                     poetry install
             - save_cache:
                 key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
