@@ -7,6 +7,13 @@ license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.6"
+flask = "^1.0"
+blosc = "^1.6"
+typing = "^3.6"
+typing-extensions = "^3.6"
+pyzmq = "^17.1"
+attrs = "^18.2"
+numpy = "^1.15"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.1"
