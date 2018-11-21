@@ -14,15 +14,16 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
             - run:
                 name: Install dependencies
                 command: |
                     python3 -m venv bvenv
                     . bvenv/bin/activate
-                    pip install -r bossphorus/requirements.txt
+                    pip install poetry
+                    poetry install
             - save_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
                 paths:
                     - "bvenv"
     bossphorus_lint:
@@ -31,7 +32,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
             - run:
                 name: Lint bossphorus
                 command: |
@@ -43,7 +44,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
             - run:
                 name: Test bossphorus (pytest)
                 command: |
@@ -56,15 +57,16 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
             - run:
                 name: Install dependencies
                 command: |
                     python3 -m venv mvenv
                     . mvenv/bin/activate
-                    pip install -r marmara/requirements.txt
+                    pip install poetry
+                    poetry install
             - save_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
                 paths:
                     - "mvenv"
     marmara_lint:
@@ -73,7 +75,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
             - run:
                 name: Lint marmara
                 command: |
@@ -85,7 +87,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/requirements.txt" }}
+                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
             - run:
                 name: Test marmara (pytest)
                 command: |

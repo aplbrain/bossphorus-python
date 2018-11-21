@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".circleci"
+		},
+		{
+			"path": "bossphorus"
+		},
+		{
+			"path": "marmara"
+		}
+	],
+	"settings": {}
+}
