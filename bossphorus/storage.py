@@ -67,7 +67,7 @@ class StorageProxy(Protocol):
         ...
 
 
-class InProcessStorageEngine(StorageProxy):
+class InProcessStorageProxy(StorageProxy):
 
     def __init__(self, engine: StorageEngine) -> None:
         self._engine = engine
