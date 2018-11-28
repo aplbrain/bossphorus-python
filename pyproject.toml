@@ -1,24 +1,24 @@
 [tool.poetry]
-name = "marmara"
+name = "bossphorus"
 version = "1.0.0"
-description = "Baby bossDB Storage Engine and Caching"
+description = "A portable bossDB cache layer and API implementation"
 authors = ["Jordan Matelsky <jordan.matelsky@jhuapl.edu>", "Miller Wilt <miller.wilt@jhuapl.edu>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-numpy = "^1.15"
-intern = "^0.9.10"
-attrs = "^18.2"
+flask = "^1.0"
+blosc = "^1.6"
 typing = "^3.6"
 typing-extensions = "^3.6"
-pylint = "^2.1"
-pyzmq = "^17.1"
+attrs = "^18.2"
+numpy = "^1.15"
+intern = "^0.9.10"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.1"
-mypy = "^0.641.0"
 pytest = "^4.0"
+mypy = "^0.641.0"
 autopep8 = "^1.4"
 rope = "^0.11.0"
 

@@ -5,7 +5,7 @@ from intern.resource.boss import ExperimentResource, CoordinateFrameResource
 import numpy as np
 from typing_extensions import Protocol
 
-from .coordinate_frame import CutoutCoordinateFrame
+from ..common import CutoutCoordinateFrame
 
 class CutoutNotFoundError(Exception):
     pass
@@ -224,7 +224,7 @@ class BossStorageEngine(AbstractStorageLayer):
             chan_info = self.remote.get_channel(coord.channel, coord.collection, coord.experiment)
         except Exception as e:
             return False
-        
+
         # does coordframe exist?
         try:
             exp_info = self.remote.get_project(

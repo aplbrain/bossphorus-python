@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from marmara.coordinate_frame import CutoutCoordinateFrame
-from marmara.engine import InMemoryNumpyStorageEngine
+from bossphorus.common import CutoutCoordinateFrame
+from bossphorus.marmara.engine import InMemoryNumpyStorageEngine
 
 @pytest.fixture
 def in_memory_engine():

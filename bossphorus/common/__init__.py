@@ -2,6 +2,7 @@ from typing import Tuple
 
 import attr
 
+
 @attr.s(frozen=True)
 class CutoutCoordinateFrame:
     """Represents a specific BOSS cutout."""
