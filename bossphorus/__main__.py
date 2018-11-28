@@ -1,10 +1,10 @@
 import numpy as np
-from . import Bossphorus, create_app
-from .storage import InProcessStorageProxy
-from .marmara.engine import InMemoryNumpyStorageEngine
+
+from bossphorus import Bossphorus, create_app
+from bossphorus.storage import InProcessStorageProxy
+from bossphorus.marmara.engine import InMemoryNumpyStorageEngine
 
 def main():
-    print("main")
     app = create_app(Bossphorus(
         InProcessStorageProxy(
             InMemoryNumpyStorageEngine(
@@ -13,3 +13,6 @@ def main():
         )
     ))
     app.run(host="0.0.0.0", debug=True)
+
+if __name__ == '__main__':
+    main()

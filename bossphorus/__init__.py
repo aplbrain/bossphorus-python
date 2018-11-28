@@ -11,13 +11,13 @@ class Bossphorus:
         self.proxy = proxy
 
 
-def create_app(bossphorus: Bossphorus):
+def create_app(bossphorus: Bossphorus, name: str = None):
     # Importing here so as to not pollute the bossphorus package namespace.
     import blosc
     from flask import Flask, make_response, request
     import numpy as np
 
-    app = Flask(__name__)
+    app = Flask(name if name else __name__)
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"

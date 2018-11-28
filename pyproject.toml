@@ -6,7 +6,7 @@ authors = ["Jordan Matelsky <jordan.matelsky@jhuapl.edu>", "Miller Wilt <miller.
 license = "Apache-2.0"
 
 [tool.poetry.scripts]
-bossphorus = "bossphorus:__main__.main"
+bossphorus = "bossphorus.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"
