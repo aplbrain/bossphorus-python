@@ -53,51 +53,6 @@ jobs:
                     . bvenv/bin/activate
                     python -m pytest bossphorus
 
-    marmara_build:
-        docker:
-            - image: circleci/python:3.7.1
-        steps:
-            - checkout
-            - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
-            - run:
-                name: Install dependencies
-                command: |
-                    python3 -m venv mvenv
-                    . mvenv/bin/activate
-                    pip install poetry
-                    cd marmara
-                    poetry install
-            - save_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
-                paths:
-                    - "mvenv"
-    marmara_lint:
-        docker:
-            - image: circleci/python:3.7.1
-        steps:
-            - checkout
-            - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
-            - run:
-                name: Lint marmara
-                command: |
-                    . mvenv/bin/activate
-                    cd marmara
-                    python -m pylint marmara
-    marmara_test:
-        docker:
-            - image: circleci/python:3.7.1
-        steps:
-            - checkout
-            - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "marmara/poetry.lock" }}
-            - run:
-                name: Test marmara (pytest)
-                command: |
-                    . mvenv/bin/activate
-                    python -m pytest marmara
-
 workflows:
     version: 2
     test_all:
@@ -112,18 +67,7 @@ workflows:
             - bossphorus_test:
                 requires:
                     - bossphorus_build
-            - marmara_build:
-                requires:
-                    - prepare
-            - marmara_lint:
-                requires:
-                    - marmara_build
-            - marmara_test:
-                requires:
-                    - marmara_build
             - collect_artifacts:
                 requires:
                     - bossphorus_test
                     - bossphorus_lint
-                    - marmara_test
-                    - marmara_lint
