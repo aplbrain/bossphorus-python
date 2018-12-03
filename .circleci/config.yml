@@ -14,7 +14,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
+                key: deps01-{{ .Branch }}-{{ checksum "poetry.lock" }}
             - run:
                 name: Install dependencies
                 command: |
@@ -24,7 +24,7 @@ jobs:
                     cd bossphorus
                     poetry install
             - save_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
+                key: deps01-{{ .Branch }}-{{ checksum "poetry.lock" }}
                 paths:
                     - "bvenv"
     bossphorus_lint:
@@ -33,7 +33,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
+                key: deps01-{{ .Branch }}-{{ checksum "poetry.lock" }}
             - run:
                 name: Lint bossphorus
                 command: |
@@ -46,7 +46,7 @@ jobs:
         steps:
             - checkout
             - restore_cache:
-                key: deps01-{{ .Branch }}-{{ checksum "bossphorus/poetry.lock" }}
+                key: deps01-{{ .Branch }}-{{ checksum "poetry.lock" }}
             - run:
                 name: Test bossphorus (pytest)
                 command: |
