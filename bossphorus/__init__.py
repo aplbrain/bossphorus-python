@@ -14,7 +14,7 @@ class Bossphorus:
 def create_app(bossphorus: Bossphorus, name: str = None):
     # Importing here so as to not pollute the bossphorus package namespace.
     import blosc
-    from flask import Flask, make_response, request
+    from flask import Flask, make_response, request, jsonify
     import numpy as np
 
     app = Flask(name if name else __name__)
@@ -77,8 +77,6 @@ def create_app(bossphorus: Bossphorus, name: str = None):
         data = np.ascontiguousarray(data)
         response = make_response(blosc.compress(data, typesize=16))
         return response
-
-    return app
 
     @app.route(
         "/v1/collection/<collection>/experiment/<experiment>/channel/<channel>/",
@@ -144,3 +142,6 @@ def create_app(bossphorus: Bossphorus, name: str = None):
             "base_resolution": 0,
             "creator": "None",
         })
+
+
+    return app
