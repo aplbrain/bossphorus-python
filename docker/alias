@@ -1,1 +1,0 @@
-function bossphorus { docker run -dt -p 5000:5000 -v $1:/bossphorus/uploads bossphorus; }
