@@ -21,7 +21,6 @@ jobs:
                     python3 -m venv bvenv
                     . bvenv/bin/activate
                     pip install poetry
-                    cd bossphorus
                     poetry install
             - save_cache:
                 key: deps01-{{ .Branch }}-{{ checksum "poetry.lock" }}
@@ -38,7 +37,6 @@ jobs:
                 name: Lint bossphorus
                 command: |
                     . bvenv/bin/activate
-                    cd bossphorus
                     python -m pylint bossphorus
     bossphorus_test:
         docker:
