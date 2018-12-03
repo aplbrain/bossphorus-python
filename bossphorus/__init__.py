@@ -79,3 +79,68 @@ def create_app(bossphorus: Bossphorus, name: str = None):
         return response
 
     return app
+
+    @app.route(
+        "/v1/collection/<collection>/experiment/<experiment>/channel/<channel>/",
+        methods=["GET"]
+    )
+    def get_channel(collection, experiment, channel):
+        """
+        Uses bossURI format.
+
+        TODO: Look up metadata
+        """
+        return jsonify({
+            "name": channel,
+            "description": "",
+            "experiment": experiment,
+            "collection": collection,
+            "default_time_sample": 0,
+            "type": "image",
+            "base_resolution": 0,
+            "datatype": "uint8",
+            "creator": "None",
+            "sources": [],
+            "downsample_status": "NOT_DOWNSAMPLED",
+            "related": []
+        })
+
+    @app.route(
+        "/v1/collection/<collection>/experiment/<experiment>/",
+        methods=["GET"]
+    )
+    def get_experiment(collection, experiment):
+        """
+        Uses bossURI format.
+
+        TODO: Look up metadata
+        """
+        return jsonify({
+            "name": experiment,
+            "collection": collection,
+            "coord_frame": "NoneSpecified", # TODO
+            "description": "",
+            "type": "image",
+            "base_resolution": 0,
+            "datatype": "uint8",
+            "creator": "None",
+            "sources": [],
+            "downsample_status": "NOT_DOWNSAMPLED",
+            "related": []
+        })
+
+    @app.route(
+        "/v1/coord/<coordframe>/",
+        methods=["GET"]
+    )
+    def get_coordinate_frame(coordframe):
+        """
+        Uses bossURI format.
+
+        TODO
+        """
+        return jsonify({
+            "name": coordframe,
+            "base_resolution": 0,
+            "creator": "None",
+        })
