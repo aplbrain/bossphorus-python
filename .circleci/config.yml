@@ -65,7 +65,7 @@ workflows:
             - bossphorus_test:
                 requires:
                     - bossphorus_build
-            - collect_artifacts:
-                requires:
-                    - bossphorus_test
-                    - bossphorus_lint
+#            - collect_artifacts:
+#                requires:
+#                    - bossphorus_test
+#                    - bossphorus_lint
