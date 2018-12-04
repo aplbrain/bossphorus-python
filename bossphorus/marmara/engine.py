@@ -28,8 +28,6 @@ from ..common import CutoutCoordinateFrame
 class CutoutNotFoundError(Exception):
     """Raise when a cutout cannot be found on the associated engine."""
 
-    pass
-
 
 class StorageEngine(Protocol):
     """
