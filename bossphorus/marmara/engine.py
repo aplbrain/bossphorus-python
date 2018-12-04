@@ -1,14 +1,35 @@
+"""
+Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 from abc import ABC, abstractmethod
+from typing_extensions import Protocol
+
+import numpy as np
 
 from intern.remote.boss import BossRemote
 from intern.resource.boss import ExperimentResource, CoordinateFrameResource
-import numpy as np
-from typing_extensions import Protocol
 
 from ..common import CutoutCoordinateFrame
 
+
 class CutoutNotFoundError(Exception):
+    """Raise when a cutout cannot be found on the associated engine."""
+
     pass
+
 
 class StorageEngine(Protocol):
     """
@@ -18,6 +39,7 @@ class StorageEngine(Protocol):
     data are stored.
     """
 
+    # pylint: disable=unused-argument
     def get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         """
         Retrieve data from a given `CutoutCoordinateFrame`.
@@ -34,6 +56,7 @@ class StorageEngine(Protocol):
         """
         ...
 
+    # pylint: disable=unused-argument
     def has(self, coord: CutoutCoordinateFrame) -> bool:
         """
         Determine whether the storage engine has the _full_ cutout or not.
@@ -71,8 +94,20 @@ class StorageEngine(Protocol):
         """
         ...
 
+
 class AbstractStorageLayer(ABC, StorageEngine):
+    """
+    An abstract layer that gets and sets data from a cache parfait.
+
+    .
+    """
+
     def __init__(self, next_layer: StorageEngine = None) -> None:
+        """
+        Construct a new AbstractStorageLayer.
+
+        Given a next layer to check in case of failure.
+        """
         self.next_layer = next_layer
 
     def get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
@@ -94,8 +129,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
         except CutoutNotFoundError as e:
             if self.next_layer:
                 return self.next_layer.get(coord)
-            else:
-                raise e
+            raise e
 
     @abstractmethod
     def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
@@ -120,8 +154,7 @@ class AbstractStorageLayer(ABC, StorageEngine):
         except CutoutNotFoundError as e:
             if self.next_layer:
                 return self.next_layer.has(coord)
-            else:
-                raise e
+            raise e
 
     @abstractmethod
     def _has(self, coord: CutoutCoordinateFrame) -> bool:
@@ -151,12 +184,12 @@ class AbstractStorageLayer(ABC, StorageEngine):
         except CutoutNotFoundError as e:
             if self.next_layer:
                 return self.next_layer.put(coord, data)
-            else:
-                raise e
+            raise e
 
     @abstractmethod
     def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         ...
+
 
 class InMemoryNumpyStorageEngine(AbstractStorageLayer):
     """
@@ -173,11 +206,13 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
     def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         """
         Get data from the cutout.
+
+        .
         """
         return self.data[
-            coord.xs[0]:coord.xs[1],
-            coord.ys[0]:coord.ys[1],
-            coord.zs[0]:coord.zs[1],
+            coord.xs[0] : coord.xs[1],
+            coord.ys[0] : coord.ys[1],
+            coord.zs[0] : coord.zs[1],
         ]
 
     def _has(self, coord: CutoutCoordinateFrame) -> bool:
@@ -188,41 +223,65 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
         provisioned numpy array.
         """
         return (
-            (coord.xs[0] <= self.data.shape[0] and coord.xs[1] <= self.data.shape[0]) and
-            (coord.ys[0] <= self.data.shape[1] and coord.ys[1] <= self.data.shape[1]) and
-            (coord.zs[0] <= self.data.shape[2] and coord.zs[1] <= self.data.shape[2])
+            (coord.xs[0] <= self.data.shape[0] and coord.xs[1] <= self.data.shape[0])
+            and (
+                coord.ys[0] <= self.data.shape[1] and coord.ys[1] <= self.data.shape[1]
+            )
+            and (
+                coord.zs[0] <= self.data.shape[2] and coord.zs[1] <= self.data.shape[2]
+            )
         )
 
     def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         """
+        Broadcast a numpy array to the storage backend.
+
+        .
         """
         self.data[
-            coord.xs[0]:coord.xs[1],
-            coord.ys[0]:coord.ys[1],
-            coord.zs[0]:coord.zs[1],
+            coord.xs[0] : coord.xs[1],
+            coord.ys[0] : coord.ys[1],
+            coord.zs[0] : coord.zs[1],
         ] = data
 
 
 class BossStorageEngine(AbstractStorageLayer):
     """
     A StorageEngine that proxies a bossDB instance.
+
+    .
     """
 
     def __init__(self, remote: BossRemote, next_layer: StorageEngine = None) -> None:
+        """
+        Construct a new Boss storage engine.
+
+        Uses a bossDB-like API to get and store data.
+
+        Arguments:
+            remote
+            next_layer
+
+        """
         super().__init__(next_layer)
         self.remote = remote
 
     def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         return self.remote.get_cutout(
             self.remote.get_channel(coord.channel, coord.collection, coord.experiment),
-            coord.resolution, coord.xs, coord.ys, coord.zs,
+            coord.resolution,
+            coord.xs,
+            coord.ys,
+            coord.zs,
         )
 
     def _has(self, coord: CutoutCoordinateFrame) -> bool:
         # does col/ex/chan exist?
         try:
-            chan_info = self.remote.get_channel(coord.channel, coord.collection, coord.experiment)
-        except Exception as e:
+            _ = self.remote.get_channel(
+                coord.channel, coord.collection, coord.experiment
+            )
+        except Exception:
             return False
 
         # does coordframe exist?
@@ -230,21 +289,23 @@ class BossStorageEngine(AbstractStorageLayer):
             exp_info = self.remote.get_project(
                 ExperimentResource(coord.experiment, coord.collection)
             )
-            cf = self.remote.get_project(
-                CoordinateFrameResource(exp_info.coord_frame)
-            )
+            cf = self.remote.get_project(CoordinateFrameResource(exp_info.coord_frame))
 
             # Does coordinate frame contain data bounds?
             return (
-                (coord.xs[0] >= cf.x_start and coord.xs[1] <= cf.x_stop) and
-                (coord.ys[0] >= cf.y_start and coord.ys[1] <= cf.y_stop) and
-                (coord.ys[0] >= cf.y_start and coord.ys[1] <= cf.y_stop)
+                (coord.xs[0] >= cf.x_start and coord.xs[1] <= cf.x_stop)
+                and (coord.ys[0] >= cf.y_start and coord.ys[1] <= cf.y_stop)
+                and (coord.ys[0] >= cf.y_start and coord.ys[1] <= cf.y_stop)
             )
-        except Exception as e:
+        except Exception:
             return False
 
     def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         self.remote.post_cutout(
             self.remote.get_channel(coord.channel, coord.collection, coord.experiment),
-            coord.resolution, coord.xs, coord.ys, coord.zs, data,
+            coord.resolution,
+            coord.xs,
+            coord.ys,
+            coord.zs,
+            data,
         )

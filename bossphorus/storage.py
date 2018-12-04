@@ -1,9 +1,26 @@
+"""
+Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 import numpy as np
 from typing_extensions import Protocol
 
 from .common import CutoutCoordinateFrame
 
 from .marmara.engine import StorageEngine
+
 
 class StorageProxy(Protocol):
     """
@@ -13,6 +30,7 @@ class StorageProxy(Protocol):
     data are stored.
     """
 
+    # pylint: disable=unused-argument
     def get(self, coord: CutoutCoordinateFrame) -> np.array:
         """
         Retrieve a cutout from the proxied storage backend at the given `CutoutCoordinateFrame`.
@@ -29,6 +47,7 @@ class StorageProxy(Protocol):
         """
         ...
 
+    # pylint: disable=unused-argument
     def has(self, coord: CutoutCoordinateFrame) -> bool:
         """
         Determine whether the proxied storage backend has the _full_ cutout or not.
@@ -45,6 +64,7 @@ class StorageProxy(Protocol):
         """
         ...
 
+    # pylint: disable=unused-argument
     def put(self, coord: CutoutCoordinateFrame, data: np.array) -> None:
         """
         Store data in the the proxied storage backend.
@@ -68,8 +88,18 @@ class StorageProxy(Protocol):
 
 
 class InProcessStorageProxy(StorageProxy):
+    """
+    A StorageProxy that lives in memory.
+
+    Does not persist data across executions.
+    """
 
     def __init__(self, engine: StorageEngine) -> None:
+        """
+        Create a new same-process StorageProxy with a custom StorageEngine.
+
+        .
+        """
         self._engine = engine
 
     def get(self, coord: CutoutCoordinateFrame) -> np.array:

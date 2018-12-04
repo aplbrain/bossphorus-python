@@ -4,9 +4,11 @@ import pytest
 from bossphorus.common import CutoutCoordinateFrame
 from bossphorus.marmara.engine import InMemoryNumpyStorageEngine
 
+
 @pytest.fixture
 def in_memory_engine():
     return InMemoryNumpyStorageEngine(np.zeros((10, 10, 10)))
+
 
 @pytest.fixture
 def frame():
@@ -20,13 +22,16 @@ def frame():
         zs=[2, 10],
     )
 
+
 def test_in_memory_numpy_storage_engine_get(in_memory_engine, frame):
     expected = np.zeros((2, 3, 8))
     actual = in_memory_engine.get(frame)
     assert np.array_equal(actual, expected)
 
+
 def test_in_memory_numpy_storage_engine_has(in_memory_engine, frame):
     assert in_memory_engine.has(frame)
+
 
 def test_in_memory_numpy_storage_engine_put(in_memory_engine, frame):
     data = np.ones((2, 3, 8))
@@ -34,6 +39,7 @@ def test_in_memory_numpy_storage_engine_put(in_memory_engine, frame):
 
     actual = in_memory_engine.get(frame)
     assert np.array_equal(actual, data)
+
 
 def test_invalid_shape_in_memory_numpy_storage_engine(frame):
     # should fail on 2D source data
@@ -47,6 +53,7 @@ def test_invalid_shape_in_memory_numpy_storage_engine(frame):
 
     with pytest.raises(IndexError):
         se.put(frame, np.ones((10, 10)))
+
 
 def test_shape_mismatch_in_memory_numpy_storage_engine_put(in_memory_engine, frame):
     data = np.zeros((4, 4, 4))
