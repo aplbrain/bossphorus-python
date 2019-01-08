@@ -15,17 +15,17 @@ limitations under the License.
 """
 
 from . import common
-from . import marmara
-from . import storage
+from . import engine
 from . import version
 
 __version__ = version.__version__
 
 
 class Bossphorus:
-    """A class that handles scheduling calls to a storage proxy."""
-    def __init__(self, proxy: storage.StorageProxy) -> None:
-        self.proxy = proxy
+    """A class that handles scheduling calls to a storage engine."""
+
+    def __init__(self, engine: engine.StorageEngine) -> None:
+        self.engine = engine
 
 
 def create_app(bossphorus: Bossphorus, name: str = None):
@@ -54,7 +54,7 @@ def create_app(bossphorus: Bossphorus, name: str = None):
     )
     # pylint: disable=unused-variable
     def upload_cutout_xyz(
-            collection, experiment, channel, resolution, x_range, y_range, z_range
+        collection, experiment, channel, resolution, x_range, y_range, z_range
     ):
         """
         Upload a cutout.
@@ -81,7 +81,7 @@ def create_app(bossphorus: Bossphorus, name: str = None):
             ys=ys,
             zs=zs,
         )
-        bossphorus.proxy.put(coord, data)
+        bossphorus.engine.put(coord, data)
         return make_response("", 201)
 
     @app.route(
@@ -91,7 +91,7 @@ def create_app(bossphorus: Bossphorus, name: str = None):
     )
     # pylint: disable=unused-variable
     def get_cutout_xyz(
-            collection, experiment, channel, resolution, x_range, y_range, z_range
+        collection, experiment, channel, resolution, x_range, y_range, z_range
     ):
         """
         Download a cutout.
@@ -111,7 +111,7 @@ def create_app(bossphorus: Bossphorus, name: str = None):
             ys=ys,
             zs=zs,
         )
-        data = bossphorus.proxy.get(coord)
+        data = bossphorus.engine.get(coord)
         data = np.ascontiguousarray(data)
         response = make_response(blosc.compress(data, typesize=16))
         return response
