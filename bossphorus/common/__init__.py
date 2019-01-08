@@ -23,7 +23,6 @@ class CutoutNotFoundError(Exception):
     """Raise when a cutout cannot be found on the associated engine."""
 
 
-
 @attr.s(frozen=True)
 class CutoutCoordinateFrame:
     """Represents a specific BOSS cutout."""

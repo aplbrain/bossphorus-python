@@ -5,9 +5,7 @@ from intern.resource.boss import ExperimentResource, CoordinateFrameResource
 
 from .abstract_storage_layer import AbstractStorageLayer, StorageEngine
 
-from ..common import (
-    CutoutCoordinateFrame
-)
+from ..common import CutoutCoordinateFrame
 
 
 class BossStorageEngine(AbstractStorageLayer):
@@ -33,8 +31,7 @@ class BossStorageEngine(AbstractStorageLayer):
 
     def _get(self, coord: CutoutCoordinateFrame) -> np.ndarray:
         return self.remote.get_cutout(
-            self.remote.get_channel(
-                coord.channel, coord.collection, coord.experiment),
+            self.remote.get_channel(coord.channel, coord.collection, coord.experiment),
             coord.resolution,
             coord.xs,
             coord.ys,
@@ -55,8 +52,7 @@ class BossStorageEngine(AbstractStorageLayer):
             exp_info = self.remote.get_project(
                 ExperimentResource(coord.experiment, coord.collection)
             )
-            cf = self.remote.get_project(
-                CoordinateFrameResource(exp_info.coord_frame))
+            cf = self.remote.get_project(CoordinateFrameResource(exp_info.coord_frame))
 
             # Does coordinate frame contain data bounds?
             return (
@@ -69,8 +65,7 @@ class BossStorageEngine(AbstractStorageLayer):
 
     def _put(self, coord: CutoutCoordinateFrame, data: np.ndarray) -> None:
         self.remote.post_cutout(
-            self.remote.get_channel(
-                coord.channel, coord.collection, coord.experiment),
+            self.remote.get_channel(coord.channel, coord.collection, coord.experiment),
             coord.resolution,
             coord.xs,
             coord.ys,

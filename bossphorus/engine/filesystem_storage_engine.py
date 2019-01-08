@@ -7,7 +7,7 @@ from ..common import (
     CutoutCoordinateFrame,
     file_compute,
     blockfile_indices,
-    CutoutNotFoundError
+    CutoutNotFoundError,
 )
 
 from .abstract_storage_layer import AbstractStorageLayer, StorageEngine
@@ -45,8 +45,7 @@ class FilesystemStorageEngine(AbstractStorageLayer):
         try:
             return np.load(fname)
         except Exception as e:
-            raise CutoutNotFoundError(
-                "Failed to load {}.".format(fname)) from e
+            raise CutoutNotFoundError("Failed to load {}.".format(fname)) from e
 
     def _store(
         self,
@@ -99,7 +98,7 @@ class FilesystemStorageEngine(AbstractStorageLayer):
                     coord.channel,
                     coord.resolution,
                     f,
-                )[i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]]
+                )[i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]]
             except Exception as e:
                 raise CutoutNotFoundError(
                     f"Could not load coordinates {coord} from file {f}."
@@ -108,9 +107,9 @@ class FilesystemStorageEngine(AbstractStorageLayer):
                 #     i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
                 # ]
             payload[
-                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
             ] = data_partial
 
         return payload.T
@@ -159,11 +158,11 @@ class FilesystemStorageEngine(AbstractStorageLayer):
                 data_partial = np.zeros(self.block_size, dtype="uint8")
 
             data_partial[
-                i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
+                i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
             ] = data[
-                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
             ]
             data_partial = self._store(
                 data_partial,

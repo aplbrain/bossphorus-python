@@ -2,9 +2,7 @@ import numpy as np
 
 from .abstract_storage_layer import AbstractStorageLayer, StorageEngine
 
-from ..common import (
-    CutoutCoordinateFrame
-)
+from ..common import CutoutCoordinateFrame
 
 
 class InMemoryNumpyStorageEngine(AbstractStorageLayer):
@@ -26,9 +24,9 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
         .
         """
         return self.data[
-            coord.xs[0]: coord.xs[1],
-            coord.ys[0]: coord.ys[1],
-            coord.zs[0]: coord.zs[1],
+            coord.xs[0] : coord.xs[1],
+            coord.ys[0] : coord.ys[1],
+            coord.zs[0] : coord.zs[1],
         ]
 
     def _has(self, coord: CutoutCoordinateFrame) -> bool:
@@ -39,8 +37,7 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
         provisioned numpy array.
         """
         return (
-            (coord.xs[0] <= self.data.shape[0]
-             and coord.xs[1] <= self.data.shape[0])
+            (coord.xs[0] <= self.data.shape[0] and coord.xs[1] <= self.data.shape[0])
             and (
                 coord.ys[0] <= self.data.shape[1] and coord.ys[1] <= self.data.shape[1]
             )
@@ -56,7 +53,7 @@ class InMemoryNumpyStorageEngine(AbstractStorageLayer):
         .
         """
         self.data[
-            coord.xs[0]: coord.xs[1],
-            coord.ys[0]: coord.ys[1],
-            coord.zs[0]: coord.zs[1],
+            coord.xs[0] : coord.xs[1],
+            coord.ys[0] : coord.ys[1],
+            coord.zs[0] : coord.zs[1],
         ] = data
