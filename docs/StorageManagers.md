@@ -12,7 +12,7 @@ Data are stored in numpy-compressed format, and are block-chunked to enable para
 
 ## RelayStorageManager
 
-Uses `intern` (`pip install intern`) to point to an upstream bossDB or bossphorus node.
+Uses `intern` (`pip install intern`) or [`emboss`](https://github.com/aplbrain/emboss) to point to an upstream bossDB or bossphorus node.
 
 ## SimpleCacheStorageManager
 

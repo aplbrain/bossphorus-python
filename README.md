@@ -5,14 +5,18 @@
 <p align="center">a simple volumetric datastore for dense 3D data</p>
 
 <p align=center>
-    <img src="https://img.shields.io/pypi/v/bossphorus.svg" />
-    <img src="https://img.shields.io/github/last-commit/aplbrain/bossphorus.svg" />
-    <img src="https://img.shields.io/badge/Extremely Rad-👌-00ddcc.svg" />
-    <img src="https://img.shields.io/github/license/aplbrain/bossphorus.svg" />
+    <img src="https://img.shields.io/pypi/v/bossphorus.svg?style=for-the-badge" />
+    <img src="https://img.shields.io/github/last-commit/aplbrain/bossphorus.svg?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/Extremely Rad-👌-00ddcc.svg?style=for-the-badge" />
+    <img src="https://img.shields.io/github/license/aplbrain/bossphorus.svg?style=for-the-badge" />
 </p>
 
+**Bossphorus is a HTTP server that emulates the [bossDB](https://bossdb.org) API. You can use bossphorus in almost all the same ways you use a full bossDB deploy.**
+
+---
 
 > **WARNING!** *Bossphorus* is **NOT** stable and **NOT** tested. Use at your own risk, and always keep a backup copy of your data someplace safe.
+
 
 ## bossDB Feature Parity
 
@@ -92,10 +96,10 @@ The primary advantage of *bossphorus* is that it uses an identical API to that o
 
 ## Alternatives
 
-| Project | Description | If you want... |
-|---------|-------------|----------------|
-| [bossDB](https://bossdb.org) | Petabyte-scale, Cloud-Native Volumetric Database | ...faster IO speed and infinite scalability |
-| [DVID](https://github.com/janelia-flyem/dvid) | Distributed, Versioned, Image-oriented Dataservice | ...versioned data |
+| Project                                       | Description                                        | If you want...                              |
+| --------------------------------------------- | -------------------------------------------------- | ------------------------------------------- |
+| [bossDB](https://bossdb.org)                  | Petabyte-scale, Cloud-Native Volumetric Database   | ...faster IO speed and infinite scalability |
+| [DVID](https://github.com/janelia-flyem/dvid) | Distributed, Versioned, Image-oriented Dataservice | ...versioned data                           |
 
 
 ## Contributing
