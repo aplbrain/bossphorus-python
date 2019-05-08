@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
+Copyright 2019 The Johns Hopkins University Applied Physics Laboratory.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ from . import version
 
 __version__ = version.__version__
 
+
 def create_app(mgr: storagemanager.StorageManager = None):
     """
     Create a Bossphorus server app.
@@ -57,7 +58,10 @@ def create_app(mgr: storagemanager.StorageManager = None):
         zs = [int(i) for i in z_range.split(":")]
         data = data.reshape(xs[1] - xs[0], ys[1] - ys[0], zs[1] - zs[0])
         data = data.transpose()
-        manager.setdata(data, collection, experiment, channel, resolution, zs, ys, xs)
+        manager.setdata(
+            data, collection, experiment,
+            channel, resolution, zs, ys, xs
+        )
         return make_response("", 201)
 
     @app.route(
@@ -74,7 +78,8 @@ def create_app(mgr: storagemanager.StorageManager = None):
             ys = [int(i) for i in y_range.split(":")]
             zs = [int(i) for i in z_range.split(":")]
             data = data.reshape(xs[1] - xs[0], ys[1] - ys[0], zs[1] - zs[0])
-            manager.setdata(data, collection, experiment, channel, resolution, xs, ys, zs)
+            manager.setdata(data, collection, experiment,
+                            channel, resolution, xs, ys, zs)
         return ""
 
     @app.route(
@@ -112,7 +117,7 @@ def create_app(mgr: storagemanager.StorageManager = None):
         return jsonify({
             "name": experiment,
             "collection": collection,
-            "coord_frame": "NoneSpecified", # TODO
+            "coord_frame": "NoneSpecified",  # TODO
             "description": "",
             "type": "image",
             "base_resolution": 0,
@@ -153,7 +158,8 @@ def create_app(mgr: storagemanager.StorageManager = None):
         ys = [int(i) for i in y_range.split(":")]
         zs = [int(i) for i in z_range.split(":")]
         try:
-            data = manager.getdata(collection, experiment, channel, resolution, xs, ys, zs)
+            data = manager.getdata(
+                collection, experiment, channel, resolution, xs, ys, zs)
             data = np.ascontiguousarray(np.transpose(data))
             response = make_response(blosc.compress(data, typesize=16))
             return response

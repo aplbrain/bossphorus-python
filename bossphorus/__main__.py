@@ -1,5 +1,5 @@
 """
-Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
+Copyright 2019 The Johns Hopkins University Applied Physics Laboratory.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,12 @@ limitations under the License.
 
 import bossphorus
 
+
 def main():
-    """Entry point for Bossphorus"""
+    """
+    Entry point for Bossphorus.
+
+    Runs in "stable" mode, not ready for production, no debug statements.
+    """
     app = bossphorus.create_app()
     app.run(host="0.0.0.0", port=5000)

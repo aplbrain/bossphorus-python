@@ -1,5 +1,5 @@
 """
-Copyright 2018 The Johns Hopkins University Applied Physics Laboratory.
+Copyright 2019 The Johns Hopkins University Applied Physics Laboratory.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ class RelayStorageManager(StorageManager):
             self, col: str, exp: str, chan: str, res: int,
             xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
     ):
+        # TODO: Should check boss for haviness
         return True
 
     def setdata(
@@ -67,5 +68,3 @@ class RelayStorageManager(StorageManager):
         return self.boss_remote.get_cutout(
             self.boss_remote.get_channel(chan, col, exp), res, xs, ys, zs
         )
-
-
