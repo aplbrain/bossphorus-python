@@ -112,4 +112,4 @@ GIT_USER=XXXX yarn run publish-gh-pages    # build and upload the documentation
 
 -----
 
-<p align="center"><small>Made with ♥ at <a href="http://www.jhuapl.edu/"><img alt="JHU APL" align="center" src="./website/static/img/apl-logo.png" height="23px"></a></small></p>
+<p align="center"><small>Made with 💙 at <a href="http://www.jhuapl.edu/"><img alt="JHU APL" align="center" src="./website/static/img/apl-logo.png" height="23px"></a></small></p>
