@@ -19,7 +19,9 @@ from ._FilesystemStorageManager import FilesystemStorageManager
 from ._RelayStorageManager import RelayStorageManager
 
 
-def create(storage_path: str, block_size: [int, int, int], is_terminal: bool=False) -> StorageManager:
+def create(
+    storage_path: str, block_size: [int, int, int], is_terminal: bool = False
+) -> StorageManager:
     """
     Create a StorageManager instance.
 

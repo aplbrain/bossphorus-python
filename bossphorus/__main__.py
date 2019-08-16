@@ -16,6 +16,7 @@ limitations under the License.
 
 import bossphorus
 
+
 def main():
     """Entry point for Bossphorus"""
     app = bossphorus.create_app()

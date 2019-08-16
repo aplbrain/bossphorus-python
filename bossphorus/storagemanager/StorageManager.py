@@ -31,22 +31,41 @@ class StorageManager(ABC):
 
     @abstractmethod
     def getdata(
-            self, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
         ...
 
     @abstractmethod
     def hasdata(
-            self, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
         ...
 
     @abstractmethod
     def setdata(
-            self, data: np.array, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        data: np.array,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
         ...
 

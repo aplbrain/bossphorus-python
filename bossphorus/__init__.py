@@ -38,23 +38,28 @@ def create_app(mgr: storagemanager.StorageManager = None):
     """
     Create a Bossphorus server app.
     """
-    app = Flask(__name__,)
+    app = Flask(__name__)
     if mgr:
         manager = mgr
     else:
-        manager = FilesystemStorageManager("./uploads", (256, 256, 256), next_layer=(
-            RelayStorageManager(
-                upstream_uri="api.bossdb.org",
-                protocol="https", token="PUBLIC"
-            )
-        ))
+        manager = FilesystemStorageManager(
+            "./uploads",
+            (256, 256, 256),
+            next_layer=(
+                RelayStorageManager(
+                    upstream_uri="api.bossdb.org", protocol="https", token="PUBLIC"
+                )
+            ),
+        )
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"
         "<resolution>/<x_range>/<y_range>/<z_range>/",
-        methods=["POST"]
+        methods=["POST"],
     )
-    def upload_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range, z_range):
+    def upload_cutout_xyz(
+        collection, experiment, channel, resolution, x_range, y_range, z_range
+    ):
         """
         Upload a volume.
 
@@ -66,16 +71,17 @@ def create_app(mgr: storagemanager.StorageManager = None):
         zs = [int(i) for i in z_range.split(":")]
         data = data.reshape(xs[1] - xs[0], ys[1] - ys[0], zs[1] - zs[0])
         data = data.transpose()
-        manager.setdata(data, collection, experiment,
-                        channel, resolution, zs, ys, xs)
+        manager.setdata(data, collection, experiment, channel, resolution, zs, ys, xs)
         return make_response("", 201)
 
     @app.route(
         "/cutout/upload/<collection>/<experiment>/<channel>/"
         "<resolution>/<x_range>/<y_range>/<z_range>/",
-        methods=["POST"]
+        methods=["POST"],
     )
-    def upload_cutout_json(collection, experiment, channel, resolution, x_range, y_range, z_range):
+    def upload_cutout_json(
+        collection, experiment, channel, resolution, x_range, y_range, z_range
+    ):
         for _, f in request.files.items():
             memfile = io.BytesIO()
             f.save(memfile)
@@ -84,77 +90,74 @@ def create_app(mgr: storagemanager.StorageManager = None):
             ys = [int(i) for i in y_range.split(":")]
             zs = [int(i) for i in z_range.split(":")]
             data = data.reshape(xs[1] - xs[0], ys[1] - ys[0], zs[1] - zs[0])
-            manager.setdata(data, collection, experiment,
-                            channel, resolution, xs, ys, zs)
+            manager.setdata(
+                data, collection, experiment, channel, resolution, xs, ys, zs
+            )
         return ""
 
     @app.route(
         "/v1/collection/<collection>/experiment/<experiment>/channel/<channel>/",
-        methods=["GET"]
+        methods=["GET"],
     )
     def get_channel(collection, experiment, channel):
         """
         Uses bossURI format.
         """
-        return jsonify({
-            "name": channel,
-            "description": "",
-            "experiment": experiment,
-            "collection": collection,
-            "default_time_sample": 0,
-            "type": "image",
-            "base_resolution": 0,
-            "datatype": "uint8",
-            "creator": "None",
-            "sources": [],
-            "downsample_status": "NOT_DOWNSAMPLED",
-            "related": []
-        })
+        return jsonify(
+            {
+                "name": channel,
+                "description": "",
+                "experiment": experiment,
+                "collection": collection,
+                "default_time_sample": 0,
+                "type": "image",
+                "base_resolution": 0,
+                "datatype": "uint8",
+                "creator": "None",
+                "sources": [],
+                "downsample_status": "NOT_DOWNSAMPLED",
+                "related": [],
+            }
+        )
 
-    @app.route(
-        "/v1/collection/<collection>/experiment/<experiment>/",
-        methods=["GET"]
-    )
+    @app.route("/v1/collection/<collection>/experiment/<experiment>/", methods=["GET"])
     def get_experiment(collection, experiment):
         """
 
         Uses bossURI format.
         """
-        return jsonify({
-            "name": experiment,
-            "collection": collection,
-            "coord_frame": "NoneSpecified",  # TODO
-            "description": "",
-            "type": "image",
-            "base_resolution": 0,
-            "datatype": "uint8",
-            "creator": "None",
-            "sources": [],
-            "downsample_status": "NOT_DOWNSAMPLED",
-            "related": []
-        })
+        return jsonify(
+            {
+                "name": experiment,
+                "collection": collection,
+                "coord_frame": "NoneSpecified",  # TODO
+                "description": "",
+                "type": "image",
+                "base_resolution": 0,
+                "datatype": "uint8",
+                "creator": "None",
+                "sources": [],
+                "downsample_status": "NOT_DOWNSAMPLED",
+                "related": [],
+            }
+        )
 
-    @app.route(
-        "/v1/coord/<coordframe>/",
-        methods=["GET"]
-    )
+    @app.route("/v1/coord/<coordframe>/", methods=["GET"])
     def get_coordinate_frame(coordframe):
         """
 
         Uses bossURI format.
         """
-        return jsonify({
-            "name": coordframe,
-            "base_resolution": 0,
-            "creator": "None",
-        })
+        return jsonify({"name": coordframe, "base_resolution": 0, "creator": "None"})
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"
         "<resolution>/<x_range>/<y_range>/<z_range>/",
-        methods=["GET"]
+        methods=["GET"],
     )
-    def get_cutout_xyz(collection, experiment, channel, resolution, x_range, y_range, z_range):
+    def get_cutout_xyz(
+        collection, experiment, channel, resolution, x_range, y_range, z_range
+    ):
         """
         Download a volume.
 
@@ -165,24 +168,26 @@ def create_app(mgr: storagemanager.StorageManager = None):
         zs = [int(i) for i in z_range.split(":")]
         try:
             data = manager.getdata(
-                collection, experiment, channel, resolution, xs, ys, zs)
+                collection, experiment, channel, resolution, xs, ys, zs
+            )
             data = np.ascontiguousarray(np.transpose(data))
             response = make_response(blosc.compress(data, typesize=16))
             return response
         except IOError as e:
             return Response(
-                json.dumps({"message": str(e)}),
-                status=404,
-                mimetype="application/json"
+                json.dumps({"message": str(e)}), status=404, mimetype="application/json"
             )
 
     @app.route("/")
     def home():
-        return render_template("home.html", **{
-            "version": __version__,
-            "cache_stack": [*manager.get_stack_names()],
-            "server_time": datetime.datetime.now(),
-            "platform": sys.platform
-        })
+        return render_template(
+            "home.html",
+            **{
+                "version": __version__,
+                "cache_stack": [*manager.get_stack_names()],
+                "server_time": datetime.datetime.now(),
+                "platform": sys.platform,
+            }
+        )
 
     return app

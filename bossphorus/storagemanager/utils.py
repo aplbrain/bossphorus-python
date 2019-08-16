@@ -14,8 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-def file_compute(x_start: int, x_stop: int, y_start: int, y_stop: int,
-                 z_start: int, z_stop: int, block_size: [int, int, int]):
+
+def file_compute(
+    x_start: int,
+    x_stop: int,
+    y_start: int,
+    y_stop: int,
+    z_start: int,
+    z_stop: int,
+    block_size: [int, int, int],
+):
     """
     Compute the (possibly extant) files that would hold this volume.
 
@@ -49,8 +57,15 @@ def file_compute(x_start: int, x_stop: int, y_start: int, y_stop: int,
     return files
 
 
-def block_compute(x_start: int, x_stop: int, y_start: int, y_stop: int,
-                  z_start: int, z_stop: int, block_size: [int, int, int]):
+def block_compute(
+    x_start: int,
+    x_stop: int,
+    y_start: int,
+    y_stop: int,
+    z_start: int,
+    z_stop: int,
+    block_size: [int, int, int],
+):
     """
     Compute the block-aligned delimiters for this volume.
 
@@ -85,16 +100,19 @@ def block_compute(x_start: int, x_stop: int, y_start: int, y_stop: int,
     for x in x_block_origins:
         for y in y_block_origins:
             for z in z_block_origins:
-                files.append((
-                    (x, min(x_stop, x+block_size[0])),
-                    (y, min(y_stop, y+block_size[1])),
-                    (z, min(z_stop, z+block_size[2]))
-                ))
+                files.append(
+                    (
+                        (x, min(x_stop, x + block_size[0])),
+                        (y, min(y_stop, y + block_size[1])),
+                        (z, min(z_stop, z + block_size[2])),
+                    )
+                )
     return files
 
 
-def blockfile_indices(xs: [int, int], ys: [int, int], zs: [int, int],
-                      block_size: [int, int, int]):
+def blockfile_indices(
+    xs: [int, int], ys: [int, int], zs: [int, int], block_size: [int, int, int]
+):
     """
     Return the indices PER BLOCK for each file required.
 
@@ -109,21 +127,17 @@ def blockfile_indices(xs: [int, int], ys: [int, int], zs: [int, int],
     Request of (10, 150) returns             (10, 100), (0, 50)
     Request of (10, 250) returns (10, 100), (0, 100), (100, 50)
     """
-    blocks = block_compute(
-        xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-        block_size
-    )
-    files = file_compute(
-        xs[0], xs[1], ys[0], ys[1], zs[0], zs[1],
-        block_size
-    )
+    blocks = block_compute(xs[0], xs[1], ys[0], ys[1], zs[0], zs[1], block_size)
+    files = file_compute(xs[0], xs[1], ys[0], ys[1], zs[0], zs[1], block_size)
 
     inds = []
     for b, f in zip(blocks, files):
-        inds.append([
-            (b[0][0] - f[0], b[0][1] - f[0]),
-            (b[1][0] - f[1], b[1][1] - f[1]),
-            (b[2][0] - f[2], b[2][1] - f[2])
-        ])
+        inds.append(
+            [
+                (b[0][0] - f[0], b[0][1] - f[0]),
+                (b[1][0] - f[1], b[1][1] - f[1]),
+                (b[2][0] - f[2], b[2][1] - f[2]),
+            ]
+        )
 
     return inds

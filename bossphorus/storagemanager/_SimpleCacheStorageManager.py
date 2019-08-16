@@ -41,24 +41,42 @@ class SimpleCacheStorageManager(StorageManager):
         self.layers = layers
 
     def hasdata(
-            self, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
-        return any([
-            layer.hasdata(col, exp, chan, res, xs, ys, zs)
-            for layer in self.layers
-        ])
+        return any(
+            [layer.hasdata(col, exp, chan, res, xs, ys, zs) for layer in self.layers]
+        )
 
     def setdata(
-            self, data: np.array, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        data: np.array,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
         for layer in self.layers:
             layer.setdata(data, col, exp, chan, res, xs, ys, zs)
 
     def getdata(
-            self, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ) -> np.array:
         for layer in self.layers:
             if layer.hasdata(col, exp, chan, res, xs, ys, zs):

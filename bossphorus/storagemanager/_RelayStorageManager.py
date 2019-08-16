@@ -46,15 +46,23 @@ class RelayStorageManager(StorageManager):
         if "boss_remote" in kwargs:
             self.boss_remote = kwargs["boss_remote"]
         elif "upstream_uri" in kwargs:
-            self.boss_remote = BossRemote({
-                "host": kwargs["upstream_uri"],
-                "protocol": kwargs.get("protocol", "http"),
-                "token": kwargs.get("token", "no-token")
-            })
+            self.boss_remote = BossRemote(
+                {
+                    "host": kwargs["upstream_uri"],
+                    "protocol": kwargs.get("protocol", "http"),
+                    "token": kwargs.get("token", "no-token"),
+                }
+            )
 
     def hasdata(
-            self, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
         has_data = self.boss_remote.get_channel(f"bossdb://{col}/{exp}/{chan}")
         if has_data:
@@ -65,16 +73,29 @@ class RelayStorageManager(StorageManager):
         return False
 
     def setdata(
-            self, data: np.array, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        data: np.array,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ):
         return self.boss_remote.create_cutout(
             self.boss_remote.get_channel(chan, col, exp), res, xs, ys, zs, data
         )
 
     def getdata(
-            self, col: str, exp: str, chan: str, res: int,
-            xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
+        self,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        xs: Tuple[int, int],
+        ys: Tuple[int, int],
+        zs: Tuple[int, int],
     ) -> np.array:
         return self.boss_remote.get_cutout(
             self.boss_remote.get_channel(chan, col, exp), res, xs, ys, zs
@@ -87,7 +108,4 @@ class RelayStorageManager(StorageManager):
         if self.is_terminal:
             return [str(self)]
         else:
-            return [
-                str(self),
-                *self._next.get_stack_names()
-            ]
+            return [str(self), *self._next.get_stack_names()]
