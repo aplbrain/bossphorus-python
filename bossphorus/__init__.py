@@ -18,7 +18,9 @@ limitations under the License.
 
 import io
 import json
+import datetime
 import os
+import sys
 from typing import List
 
 import blosc
@@ -172,9 +174,9 @@ def create_app(mgr: storagemanager.StorageManager = None):
     def home():
         return render_template("home.html", **{
             "version": __version__,
-            "cache_stack":
-                [*manager.get_stack_names()]
-
+            "cache_stack": [*manager.get_stack_names()],
+            "server_time": datetime.datetime.now(),
+            "platform": sys.platform
         })
 
     return app
