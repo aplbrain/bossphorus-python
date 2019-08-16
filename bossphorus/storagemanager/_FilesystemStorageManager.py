@@ -23,7 +23,7 @@ from .StorageManager import StorageManager
 from .utils import file_compute, blockfile_indices
 
 
-class FileInterface(ABC):
+class ChunkedFileInterface(ABC):
     """
     A filesystem manager that handles transit from numpy in-memory to a
     static format on disk.
@@ -50,14 +50,14 @@ class FileInterface(ABC):
         ...
 
 
-class NpyFileInterface(FileInterface):
+class NpyChunkedFileInterface(ChunkedFileInterface):
     def __init__(self, storage_path: str, block_size):
         self.storage_path = storage_path
         self.block_size = block_size
         self.format_name = "NPY"
 
-        def __repr__(self):
-            return f"<NpyFileInterface>"
+    def __repr__(self):
+        return f"<NpyChunkedFileInterface>"
 
     def store(
         self,
@@ -120,14 +120,14 @@ class NpyFileInterface(FileInterface):
         return np.load(fname)
 
 
-class H5FileInterface(FileInterface):
+class H5ChunkedFileInterface(ChunkedFileInterface):
     def __init__(self, storage_path: str, block_size):
         self.storage_path = storage_path
         _ = block_size
         self.format_name = "h5"
 
         def __repr__(self):
-            return f"<H5FileInterface>"
+            return f"<H5ChunkedFileInterface>"
 
     def store(
         self,
@@ -189,7 +189,7 @@ class FilesystemStorageManager(StorageManager):
         self.block_size = block_size
 
         self.fs = (
-            {"npy": NpyFileInterface, "h5": H5FileInterface}.get(
+            {"npy": NpyChunkedFileInterface, "h5": H5ChunkedFileInterface}.get(
                 kwargs.get("preferred_format", "npy"))
         )(self.storage_path, self.block_size)
 
