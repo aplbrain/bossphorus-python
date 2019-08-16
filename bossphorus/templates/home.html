@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            font-family: 'Roboto', sans-serif;
+            max-width: 70em;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table tr:nth-child(2n),
+        thead {
+            background: rgba(10, 10, 40, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(100, 100, 150, 0.1) !important;
+        }
+
+        blockquote {
+            background: rgba(10, 20, 10, 0.05);
+            padding: 1em;
+        }
+    </style>
+    <title>bossphorus {{ version }}</title>
+</head>
+
+<body>
+    <center>
+        <h1>bossphorus server is running.</h1>
+        <h6>bossphorus version {{ version }}</h6>
+    </center>
+
+    <blockquote>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Version</td>
+                    <td>{{ version }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td rowspan="{{(cache_stack | length) + 1 }}">Cache Stack</td>
+                    <td><code>API Layer</code></td>
+                    <td></td>
+                </tr>
+                {% for layer in cache_stack %}
+                <tr>
+                    <td><code>{{ layer }}</code></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </blockquote>
+</body>
+
+</html>

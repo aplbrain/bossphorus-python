@@ -49,3 +49,7 @@ class StorageManager(ABC):
             xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
     ):
         ...
+
+    @abstractmethod
+    def get_stack_names(self):
+        ...

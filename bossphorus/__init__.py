@@ -18,11 +18,11 @@ limitations under the License.
 
 import io
 import json
-
+import os
 from typing import List
 
 import blosc
-from flask import Flask, request, Response, jsonify, make_response
+from flask import Flask, request, Response, jsonify, make_response, render_template
 import numpy as np
 
 from . import storagemanager
@@ -30,11 +30,12 @@ from . import version
 
 __version__ = version.__version__
 
+
 def create_app(mgr: storagemanager.StorageManager = None):
     """
     Create a Bossphorus server app.
     """
-    app = Flask(__name__)
+    app = Flask(__name__, os.path.realpath(__file__))
     if mgr:
         manager = mgr
     else:
@@ -57,7 +58,8 @@ def create_app(mgr: storagemanager.StorageManager = None):
         zs = [int(i) for i in z_range.split(":")]
         data = data.reshape(xs[1] - xs[0], ys[1] - ys[0], zs[1] - zs[0])
         data = data.transpose()
-        manager.setdata(data, collection, experiment, channel, resolution, zs, ys, xs)
+        manager.setdata(data, collection, experiment,
+                        channel, resolution, zs, ys, xs)
         return make_response("", 201)
 
     @app.route(
@@ -74,7 +76,8 @@ def create_app(mgr: storagemanager.StorageManager = None):
             ys = [int(i) for i in y_range.split(":")]
             zs = [int(i) for i in z_range.split(":")]
             data = data.reshape(xs[1] - xs[0], ys[1] - ys[0], zs[1] - zs[0])
-            manager.setdata(data, collection, experiment, channel, resolution, xs, ys, zs)
+            manager.setdata(data, collection, experiment,
+                            channel, resolution, xs, ys, zs)
         return ""
 
     @app.route(
@@ -112,7 +115,7 @@ def create_app(mgr: storagemanager.StorageManager = None):
         return jsonify({
             "name": experiment,
             "collection": collection,
-            "coord_frame": "NoneSpecified", # TODO
+            "coord_frame": "NoneSpecified",  # TODO
             "description": "",
             "type": "image",
             "base_resolution": 0,
@@ -153,7 +156,8 @@ def create_app(mgr: storagemanager.StorageManager = None):
         ys = [int(i) for i in y_range.split(":")]
         zs = [int(i) for i in z_range.split(":")]
         try:
-            data = manager.getdata(collection, experiment, channel, resolution, xs, ys, zs)
+            data = manager.getdata(
+                collection, experiment, channel, resolution, xs, ys, zs)
             data = np.ascontiguousarray(np.transpose(data))
             response = make_response(blosc.compress(data, typesize=16))
             return response
@@ -165,8 +169,12 @@ def create_app(mgr: storagemanager.StorageManager = None):
             )
 
     @app.route("/")
-    def hello():
-        """Root route."""
-        return __version__
+    def home():
+        return render_template("home.html", **{
+            "version": __version__,
+            "cache_stack":
+                [*manager.get_stack_names()]
+
+        })
 
     return app

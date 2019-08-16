@@ -13,13 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from typing import Tuple
+from typing import Tuple, List
 
 import os
 import numpy as np
 
 from .StorageManager import StorageManager
 from .utils import file_compute, blockfile_indices
+
 
 class FilesystemStorageManager(StorageManager):
     """
@@ -39,6 +40,7 @@ class FilesystemStorageManager(StorageManager):
             storage_path: Where to store the data tree
             block_size: How much data should go in each file
         """
+        self.name = "FilesystemStorageManager"
         self.is_terminal = is_terminal
         self.storage_path = storage_path
         self.block_size = block_size
@@ -123,9 +125,9 @@ class FilesystemStorageManager(StorageManager):
                     i[2][0]:i[2][1],
                 ]
             payload[
-                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
             ] = data_partial
 
         return payload
@@ -178,3 +180,6 @@ class FilesystemStorageManager(StorageManager):
             (b[2], b[2] + self.block_size[2]),
         )
         return np.load(fname)
+
+    def get_stack_names(self) -> List[str]:
+        return [self.name, *["<END>" if self.is_terminal else "dest"]]
