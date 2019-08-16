@@ -19,7 +19,6 @@ import os
 import numpy as np
 
 from .StorageManager import StorageManager
-from .utils import file_compute, blockfile_indices
 
 
 class CloudVolumeStorageManager(StorageManager):

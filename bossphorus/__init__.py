@@ -41,6 +41,13 @@ def create_app(mgr: storagemanager.StorageManager = None):
     else:
         manager = storagemanager.create("./uploads", (256, 256, 256))
 
+    @app.route("/")
+    def index():
+        return jsonify({
+            "_name": "bossphorus",
+            "version": __version__,
+        })
+
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"
         "<resolution>/<x_range>/<y_range>/<z_range>/",
@@ -111,8 +118,9 @@ def create_app(mgr: storagemanager.StorageManager = None):
     )
     def get_experiment(collection, experiment):
         """
-
         Uses bossURI format.
+
+        .
         """
         return jsonify({
             "name": experiment,
