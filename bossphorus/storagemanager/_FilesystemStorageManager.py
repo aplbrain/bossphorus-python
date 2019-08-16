@@ -120,6 +120,47 @@ class NpyFileInterface(FileInterface):
         return np.load(fname)
 
 
+class H5FileInterface(FileInterface):
+    def __init__(self, storage_path: str, block_size):
+        self.storage_path = storage_path
+        _ = block_size
+        self.format_name = "h5"
+
+        def __repr__(self):
+            return f"<H5FileInterface>"
+
+    def store(
+        self,
+        data: np.array,
+        col: str,
+        exp: str,
+        chan: str,
+        res: int,
+        b: Tuple[int, int, int],
+    ):
+        """
+        Store a single block file.
+
+        Arguments:
+            data (np.array)
+            bossURI
+
+        """
+        ...
+
+    def retrieve(
+        self, col: str, exp: str, chan: str, res: int, b: Tuple[int, int, int]
+    ):
+        """
+        Pull a single block from disk.
+
+        Arguments:
+            bossURI
+
+        """
+        ...
+
+
 class FilesystemStorageManager(StorageManager):
     """
     File System management for volumetric data.
@@ -148,7 +189,8 @@ class FilesystemStorageManager(StorageManager):
         self.block_size = block_size
 
         self.fs = (
-            {"npy": NpyFileInterface}.get(kwargs.get("preferred_format", "npy"))
+            {"npy": NpyFileInterface, "h5": H5FileInterface}.get(
+                kwargs.get("preferred_format", "npy"))
         )(self.storage_path, self.block_size)
 
     def hasdata(
@@ -195,11 +237,11 @@ class FilesystemStorageManager(StorageManager):
                 data_partial = np.zeros(self.block_size, dtype="uint8")
 
             data_partial[
-                i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
+                i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
             ] = data[
-                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
             ]
             data_partial = self.fs.store(data_partial, col, exp, chan, res, f)
 
@@ -231,16 +273,16 @@ class FilesystemStorageManager(StorageManager):
         for f, i in zip(files, indices):
             try:
                 data_partial = self.fs.retrieve(col, exp, chan, res, f)[
-                    i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
+                    i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
                 ]
             except:
                 data_partial = np.zeros(self.block_size, dtype="uint8")[
-                    i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
+                    i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
                 ]
             payload[
-                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
             ] = data_partial
 
         return payload
