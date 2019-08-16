@@ -30,8 +30,7 @@ class FilesystemStorageManager(StorageManager):
     """
 
     def __init__(
-            self, storage_path: str, block_size: Tuple[int, int, int],
-            is_terminal=True
+            self, storage_path: str, block_size: Tuple[int, int, int], **kwargs
     ) -> None:
         """
         Create a new FileSystemStorageManager.
@@ -41,9 +40,15 @@ class FilesystemStorageManager(StorageManager):
             block_size: How much data should go in each file
         """
         self.name = "FilesystemStorageManager"
-        self.is_terminal = is_terminal
+        if "next_layer" in kwargs:
+            self._next = kwargs["next_layer"]
+            self.is_terminal = False
+        else:
+            self.is_terminal = True
         self.storage_path = storage_path
         self.block_size = block_size
+
+        self._file_format = "NPY"
 
     def hasdata(
             self, col: str, exp: str, chan: str, res: int,
@@ -181,5 +186,14 @@ class FilesystemStorageManager(StorageManager):
         )
         return np.load(fname)
 
-    def get_stack_names(self) -> List[str]:
-        return [self.name, *["<END>" if self.is_terminal else "dest"]]
+    def __repr__(self):
+        return f"<FilesystemStorageManager [{self._file_format}]>"
+
+    def get_stack_names(self):
+        if self.is_terminal:
+            return [str(self)]
+        else:
+            return [
+                str(self),
+                *self._next.get_stack_names()
+            ]

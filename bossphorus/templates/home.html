@@ -31,14 +31,27 @@
             background: rgba(10, 20, 10, 0.05);
             padding: 1em;
         }
+
+        .img {
+            width: 100px;
+            height: 100px;
+            background: url('/static/boss2x2.png') no-repeat center center;
+            background-size: cover;
+        }
+
+        .img:hover {
+            background: url('/static/boss2x2.gif') no-repeat center center;
+            background-size: cover;
+        }
     </style>
     <title>bossphorus {{ version }}</title>
 </head>
 
 <body>
     <center>
-        <h1>bossphorus server is running.</h1>
-        <h6>bossphorus version {{ version }}</h6>
+        <h1>bossphorus is running.</h1>
+        <h4>bossphorus version {{ version }}</h4>
+        <div class="img"></div>
     </center>
 
     <blockquote>
@@ -60,7 +73,7 @@
                 </tr>
                 {% for layer in cache_stack %}
                 <tr>
-                    <td><code>{{ layer }}</code></td>
+                    <td>↳<code>{{ layer }}</code></td>
                 </tr>
                 {% endfor %}
                 <tr>

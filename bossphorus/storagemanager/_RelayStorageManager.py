@@ -37,6 +37,12 @@ class RelayStorageManager(StorageManager):
         """
         self.block_size = kwargs.get("block_size", (256, 256, 16))
 
+        if "next_layer" in kwargs:
+            self._next = kwargs["next_layer"]
+            self.is_terminal = False
+        else:
+            self.is_terminal = True
+
         if "boss_remote" in kwargs:
             self.boss_remote = kwargs["boss_remote"]
         elif "upstream_uri" in kwargs:
@@ -50,7 +56,13 @@ class RelayStorageManager(StorageManager):
             self, col: str, exp: str, chan: str, res: int,
             xs: Tuple[int, int], ys: Tuple[int, int], zs: Tuple[int, int]
     ):
-        return True
+        has_data = self.boss_remote.get_channel(f"bossdb://{col}/{exp}/{chan}")
+        if has_data:
+            return True
+
+        if not self.is_terminal:
+            return self._next.hasdata(col, exp, chan, res, xs, ys, zs)
+        return False
 
     def setdata(
             self, data: np.array, col: str, exp: str, chan: str, res: int,
@@ -68,4 +80,14 @@ class RelayStorageManager(StorageManager):
             self.boss_remote.get_channel(chan, col, exp), res, xs, ys, zs
         )
 
+    def __repr__(self):
+        return f"<RelayStorageManager [{str(self.boss_remote)}]>"
 
+    def get_stack_names(self):
+        if self.is_terminal:
+            return [str(self)]
+        else:
+            return [
+                str(self),
+                *self._next.get_stack_names()
+            ]

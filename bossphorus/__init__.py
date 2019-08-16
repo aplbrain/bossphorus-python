@@ -28,6 +28,7 @@ from flask import Flask, request, Response, jsonify, make_response, render_templ
 import numpy as np
 
 from . import storagemanager
+from .storagemanager import FilesystemStorageManager, RelayStorageManager
 from . import version
 
 __version__ = version.__version__
@@ -37,11 +38,16 @@ def create_app(mgr: storagemanager.StorageManager = None):
     """
     Create a Bossphorus server app.
     """
-    app = Flask(__name__, os.path.realpath(__file__))
+    app = Flask(__name__,)
     if mgr:
         manager = mgr
     else:
-        manager = storagemanager.create("./uploads", (256, 256, 256))
+        manager = FilesystemStorageManager("./uploads", (256, 256, 256), next_layer=(
+            RelayStorageManager(
+                upstream_uri="api.bossdb.org",
+                protocol="https", token="PUBLIC"
+            )
+        ))
 
     @app.route(
         "/v1/cutout/<collection>/<experiment>/<channel>/"
