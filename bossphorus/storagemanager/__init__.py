@@ -16,6 +16,7 @@ limitations under the License.
 
 from .StorageManager import StorageManager
 from ._FilesystemStorageManager import FilesystemStorageManager
+from ._ChunkedFilesystemStorageManager import ChunkedFilesystemStorageManager
 from ._RelayStorageManager import RelayStorageManager
 
 

@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from typing import Tuple
 
 
 def file_compute(
@@ -22,7 +23,7 @@ def file_compute(
     y_stop: int,
     z_start: int,
     z_stop: int,
-    block_size: [int, int, int],
+    block_size: Tuple[int, int, int],
 ):
     """
     Compute the (possibly extant) files that would hold this volume.
@@ -64,7 +65,7 @@ def block_compute(
     y_stop: int,
     z_start: int,
     z_stop: int,
-    block_size: [int, int, int],
+    block_size: Tuple[int, int, int],
 ):
     """
     Compute the block-aligned delimiters for this volume.
@@ -111,7 +112,10 @@ def block_compute(
 
 
 def blockfile_indices(
-    xs: [int, int], ys: [int, int], zs: [int, int], block_size: [int, int, int]
+    xs: Tuple[int, int],
+    ys: Tuple[int, int],
+    zs: Tuple[int, int],
+    block_size: Tuple[int, int, int],
 ):
     """
     Return the indices PER BLOCK for each file required.

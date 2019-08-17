@@ -18,6 +18,6 @@ import bossphorus
 
 
 def main():
-    """Entry point for Bossphorus"""
+    """Entry point for Bossphorus."""
     app = bossphorus.create_app()
     app.run(host="0.0.0.0", port=5000)
