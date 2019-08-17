@@ -222,7 +222,11 @@ class FilesystemStorageManager(StorageManager):
             bossURI
 
         """
-        return self.fs.retrieve(col, exp, chan, res, xs, ys, zs)
+        if self.hasdata(col, exp, chan, res, xs, ys, zs):
+            return self.fs.retrieve(col, exp, chan, res, xs, ys, zs)
+        if self.is_terminal:
+            raise IndexError("Cannot find data at: ", (col, exp, chan, res, xs, ys, zs))
+        return self._next.getdata(col, exp, chan, res, xs, ys, zs)
 
     def __str__(self):
         return f"<FilesystemStorageManager [{str(self.fs)}]>"
