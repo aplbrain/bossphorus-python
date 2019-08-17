@@ -39,6 +39,7 @@ def create_app(mgr: storagemanager.StorageManager = None):
     Create a Bossphorus server app.
     """
     app = Flask(__name__)
+    created = datetime.datetime.now()
     if mgr:
         manager = mgr
     else:
@@ -187,6 +188,7 @@ def create_app(mgr: storagemanager.StorageManager = None):
                 "cache_stack": [*manager.get_stack_names()],
                 "server_time": datetime.datetime.now(),
                 "platform": sys.platform,
+                "server_born": created,
             }
         )
 

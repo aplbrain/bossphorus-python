@@ -148,9 +148,7 @@ class ChunkedFilesystemStorageManager(StorageManager):
         self.block_size = block_size
 
         self.fs = (
-            {"npy": NpyChunkedFileInterface}.get(
-                kwargs.get("preferred_format", "npy")
-            )
+            {"npy": NpyChunkedFileInterface}.get(kwargs.get("preferred_format", "npy"))
         )(self.storage_path, self.block_size)
 
     def hasdata(
@@ -197,11 +195,11 @@ class ChunkedFilesystemStorageManager(StorageManager):
                 data_partial = np.zeros(self.block_size, dtype="uint8")
 
             data_partial[
-                i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
+                i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
             ] = data[
-                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
             ]
             data_partial = self.fs.store(data_partial, col, exp, chan, res, f)
 
@@ -233,16 +231,16 @@ class ChunkedFilesystemStorageManager(StorageManager):
         for f, i in zip(files, indices):
             try:
                 data_partial = self.fs.retrieve(col, exp, chan, res, f)[
-                    i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
+                    i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
                 ]
             except:
                 data_partial = np.zeros(self.block_size, dtype="uint8")[
-                    i[0][0]: i[0][1], i[1][0]: i[1][1], i[2][0]: i[2][1]
+                    i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
                 ]
             payload[
-                (f[0] + i[0][0]) - xs[0]: (f[0] + i[0][1]) - xs[0],
-                (f[1] + i[1][0]) - ys[0]: (f[1] + i[1][1]) - ys[0],
-                (f[2] + i[2][0]) - zs[0]: (f[2] + i[2][1]) - zs[0],
+                (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
+                (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
+                (f[2] + i[2][0]) - zs[0] : (f[2] + i[2][1]) - zs[0],
             ] = data_partial
 
         return payload

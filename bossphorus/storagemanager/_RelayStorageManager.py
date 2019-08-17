@@ -102,10 +102,10 @@ class RelayStorageManager(StorageManager):
         )
 
     def __repr__(self):
-        return f"<RelayStorageManager [{str(self.boss_remote)}]>"
+        return f"<RelayStorageManager [BossRemote]>"
 
     def get_stack_names(self):
         if self.is_terminal:
-            return [str(self)]
+            return [str(self), f"↳{self.boss_remote}"]
         else:
-            return [str(self), *self._next.get_stack_names()]
+            return [str(self), f"↳{self.boss_remote}", *self._next.get_stack_names()]

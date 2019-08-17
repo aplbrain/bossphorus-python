@@ -1,101 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <style>
-        body,
-        html {
-            font-family: 'Roboto', sans-serif;
-            max-width: 70em;
-            margin: auto;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <style>
+            body,
+            html {
+                font-family: 'Roboto', sans-serif;
+                max-width: 70em;
+                margin: auto;
+            }
 
-        table {
-            width: 100%;
-        }
+            table {
+                width: 100%;
+            }
 
-        tr {
-            line-height: 1.5em;
-        }
+            tr {
+                line-height: 1.5em;
+            }
 
-        td {
-            padding: 0em 1.3em;
-            min-width: 10em;
-        }
+            td {
+                padding: 0em 1.3em;
+                min-width: 10em;
+            }
 
-        table tr:nth-child(2n),
-        thead {
-            background: rgba(10, 10, 40, 0.05);
-        }
+            table tr:nth-child(2n),
+            thead {
+                background: rgba(10, 10, 40, 0.05);
+            }
 
-        tr:hover {
-            background: rgba(100, 100, 150, 0.1) !important;
-        }
+            tr:hover {
+                background: rgba(100, 100, 150, 0.1) !important;
+            }
 
-        blockquote {
-            background: rgba(10, 20, 10, 0.05);
-            padding: 1em;
-        }
+            blockquote {
+                background: rgba(10, 20, 10, 0.05);
+                padding: 1em;
+            }
 
-        .img {
-            width: 100px;
-            height: 100px;
-            background: url('/static/boss2x2.png') no-repeat center center;
-            background-size: cover;
-        }
+            .img {
+                width: 100px;
+                height: 100px;
+                background: url('/static/boss2x2.png') no-repeat center center;
+                background-size: cover;
+            }
 
-        .img:hover {
-            background: url('/static/boss2x2.gif') no-repeat center center;
-            background-size: cover;
-        }
-    </style>
-    <title>bossphorus {{ version }}</title>
-</head>
+            .img:hover {
+                background: url('/static/boss2x2.gif') no-repeat center center;
+                background-size: cover;
+            }
+        </style>
+        <title>bossphorus {{ version }}</title>
+    </head>
 
-<body>
-    <center>
-        <h1>bossphorus is running.</h1>
-        <h4>bossphorus version {{ version }}</h4>
-        <div class="img"></div>
-    </center>
+    <body>
+        <center>
+            <h1>bossphorus is running.</h1>
+            <h4>bossphorus version {{ version }}</h4>
+            <div class="img"></div>
+        </center>
 
-    <blockquote>
-        <table>
-            <thead>
-                <tr>
-                    <th>Key</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Version</td>
-                    <td>{{ version }}</td>
-                </tr>
-                <tr>
-                    <td rowspan="{{(cache_stack | length) + 1 }}">Cache Stack</td>
-                    <td><code>API Layer</code></td>
-                </tr>
-                {% for layer in cache_stack %}
-                <tr>
-                    <td>↳<code>{{ layer }}</code></td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td>Server Time</td>
-                    <td>{{ server_time }}</td>
-                </tr>
-                <tr>
-                    <td>Platform</td>
-                    <td>{{ platform }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </blockquote>
-</body>
+        <blockquote>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Version</td>
+                        <td>{{ version }}</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="{{(cache_stack | length) + 1 }}">Cache Stack</td>
+                        <td><code>API Layer</code></td>
+                    </tr>
+                    {% for layer in cache_stack %}
+                    <tr>
+                        <td><code>{{ layer }}</code></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>Server Time</td>
+                        <td>{{ server_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>Platform</td>
+                        <td>{{ platform }}</td>
+                    </tr>
+                    <tr>
+                        <td>Server Up Since</td>
+                        <td>{{ server_born }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </blockquote>
+    </body>
 
 </html>
