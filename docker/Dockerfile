@@ -1,16 +1,13 @@
-FROM ubuntu:16.04
+FROM ubuntu:latest
 
-RUN apt-get clean
+#RUN apt-get clean
 RUN apt-get update
-RUN apt-get install -y python3-dev python3-pip
-RUN pip3 install pipenv
+RUN apt-get install -y python3-dev python3-pip git
 
-ADD .. /bossphorus
+RUN git clone https://github.com/aplbrain/bossphorus.git
+WORKDIR bossphorus
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+RUN pip3 install numpy blosc h5py intern flask
 
-RUN export LC_ALL=C.UTF-8 ; export LANG=C.UTF-8 ; \
-    cd /bossphorus && pipenv install --system
-
-EXPOSE 5000
-
-ENTRYPOINT cd /bossphorus && \
-    python3 /bossphorus/run.py
+CMD ["python3", "./local_debug_run.py"]
