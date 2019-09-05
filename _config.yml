@@ -1,1 +1,13 @@
-theme: jekyll-theme-minimal
+title: bossphorus
+description: >- # this means to ignore newlines until "baseurl:"
+  bossphorus is a simple volumetric datastore for dense 3D data.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: thebossdb
+github_username:  aplbrain
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
