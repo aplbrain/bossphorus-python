@@ -4,6 +4,11 @@
     - Abstraction layer for filesystem operations
     - Chunked and non-chunked filesystem storage
     - Better cache-layer management
+    - Support for hdf5 storage manager
+    - HTTP `GET`'able homepage with metadata about the server, including:
+        - Cache layers
+        - Host machine information
+    - New and improved Dockerfile ([image on DockerHub](https://cloud.docker.com/u/aplbrain/repository/docker/aplbrain/bossphorus))
 - *0.2.0*
     - Refactor (@mlw214)
         - App factory
