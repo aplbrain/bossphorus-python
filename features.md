@@ -2,7 +2,7 @@
 
 One of the goals of Bossphorus is to approximate feature-parity with bossDB. There are many endpoints that we do not anticipate emulating: These are marked with a dot to indicate that they are not on the roadmap for this project. If your work relies upon one of these endpoints or capabilities, please get in touch by filing an Issue.
 
-In particular, **we do not plan to implement authentication or permissions logic**.
+In particular, **we do not plan to implement authentication or permissions logic**. Ingest is currently not supported, but if you are interested, please submit an Issue and let us know that you'd like it!
 
 ---
 
@@ -19,18 +19,18 @@ In particular, **we do not plan to implement authentication or permissions logic
 | **GET**  `/sso/user-role/:user_name/:role_name` | ️• | |
 | **POST**  `/sso/user-role/:user_name/:role_name` | ️• | |
 | **DELETE**  `/sso/user-role/:user_name/:role_name` | ️• | |
-| **GET**  `/collection/` | ️⛔ | |
+| **GET**  `/collection/` | ️⌛ | |
 | **GET**  `/collection/:collection/experiment/` | ️⛔ | |
 | **GET**  `/collection/:collection/experiment/:experiment/channel/` | ️⛔ | |
-| **GET**  `/coord/` | ️• | |
+| **GET**  `/coord/` | ️⌛ | |
 | **POST**  `/collection/:collection/` | ️⛔ | |
 | **POST**  `/collection/:collection/experiment/:experiment/` | ️⛔ | |
 | **POST**  `/collection/:collection/experiment/:experiment/channel/:channel/` | ️⛔ | |
 | **POST**  `/coord/:coordinate_frame` | ️• | |
-| **GET**  `/collection/:collection` | ️⛔ | |
-| **GET**  `/collection/:collection/experiment/:experiment/` | ️⛔ | |
+| **GET**  `/collection/:collection` | ️✅ | |
+| **GET**  `/collection/:collection/experiment/:experiment/` | ️✅ | |
 | **GET**  `/collection/:collection/experiment/:experiment/channel/:channel/` | ️✅ | |
-| **GET**  `/coord/:coordinate_frame` | ️• | |
+| **GET**  `/coord/:coordinate_frame` | ️✅ | |
 | **PUT**  `/collection/:collection` | ️⛔ | |
 | **PUT**  `/collection/:collection/experiment/:experiment/` | ️⛔ | |
 | **PUT**  `/collection/:collection/experiment/:experiment/channel/:channel/` | ️⛔ | |
