@@ -28,7 +28,11 @@ from flask import Flask, request, Response, jsonify, make_response, render_templ
 import numpy as np
 
 from . import storagemanager
-from .storagemanager import FilesystemStorageManager, RelayStorageManager
+from .storagemanager import (
+    FilesystemStorageManager,
+    RelayStorageManager,
+    ChunkedFilesystemStorageManager,
+)
 from . import version
 
 __version__ = version.__version__
@@ -43,12 +47,12 @@ def create_app(mgr: storagemanager.StorageManager = None):
     if mgr:
         manager = mgr
     else:
-        manager = FilesystemStorageManager(
+        manager = ChunkedFilesystemStorageManager(
             "./uploads",
             (256, 256, 256),
             next_layer=(
                 RelayStorageManager(
-                    upstream_uri="api.bossdb.org", protocol="https", token="PUBLIC"
+                    upstream_uri="api.bossdb.io", protocol="https", token="public"
                 )
             ),
         )

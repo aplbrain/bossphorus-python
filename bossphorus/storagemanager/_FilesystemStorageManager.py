@@ -135,9 +135,11 @@ class H5FileInterface(FileInterface):
         zs: Tuple[int, int],
     ):
         fname = f"{self.storage_path}/{col}/{exp}/{chan}/{res}.h5"
+        if not os.path.isfile(fname):
+            return False
         return h5py.File(fname, "r")["mask"][
             xs[0] : xs[1], ys[0] : ys[1], zs[0] : zs[1]
-        ]
+        ].all()
 
 
 class FilesystemStorageManager(StorageManager):
@@ -166,6 +168,7 @@ class FilesystemStorageManager(StorageManager):
             self.is_terminal = True
         self.storage_path = storage_path
         self.block_size = block_size
+        self._cache = kwargs.get("cache", True)
 
         self.fs = ({"h5": H5FileInterface}.get(kwargs.get("preferred_format", "h5")))(
             self.storage_path
@@ -184,7 +187,7 @@ class FilesystemStorageManager(StorageManager):
         if self.is_terminal:
             return True
 
-        return self.fs.hasdata(col, exp, chan, res, xs, ys, zs).all()
+        return self.fs.hasdata(col, exp, chan, res, xs, ys, zs)
 
     def setdata(
         self,
@@ -226,7 +229,10 @@ class FilesystemStorageManager(StorageManager):
             return self.fs.retrieve(col, exp, chan, res, xs, ys, zs)
         if self.is_terminal:
             raise IndexError("Cannot find data at: ", (col, exp, chan, res, xs, ys, zs))
-        return self._next.getdata(col, exp, chan, res, xs, ys, zs)
+        data = self._next.getdata(col, exp, chan, res, xs, ys, zs)
+        if self._cache:
+            self.setdata(data, col, exp, chan, res, xs, ys, zs)
+        return data
 
     def __str__(self):
         return f"<FilesystemStorageManager [{str(self.fs)}]>"

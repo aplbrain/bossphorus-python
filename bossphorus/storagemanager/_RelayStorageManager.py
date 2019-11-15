@@ -46,11 +46,12 @@ class RelayStorageManager(StorageManager):
         if "boss_remote" in kwargs:
             self.boss_remote = kwargs["boss_remote"]
         elif "upstream_uri" in kwargs:
+            self.token = kwargs.get("token", "public")
             self.boss_remote = BossRemote(
                 {
                     "host": kwargs["upstream_uri"],
                     "protocol": kwargs.get("protocol", "http"),
-                    "token": kwargs.get("token", "no-token"),
+                    "token": kwargs.get("token", "public"),
                 }
             )
 
