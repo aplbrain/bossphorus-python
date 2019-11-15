@@ -91,6 +91,16 @@ class NpyChunkedFileInterface(ChunkedFileInterface):
         )
         return np.save(fname, data)
 
+    def hasfile(self, col: str, exp: str, chan: str, res: int, b: Tuple[int, int, int]) -> bool:
+        if not (
+            os.path.isdir("{}/{}".format(self.storage_path, col))
+            and os.path.isdir("{}/{}/{}".format(self.storage_path, col, exp))
+            and os.path.isdir("{}/{}/{}/{}".format(self.storage_path, col, exp, chan))
+        ):
+            return False
+        return True
+
+
     def retrieve(
         self, col: str, exp: str, chan: str, res: int, b: Tuple[int, int, int]
     ):
@@ -163,6 +173,10 @@ class ChunkedFilesystemStorageManager(StorageManager):
     ):
         # TODO: Should know when it has data and return false even if it's
         # in terminal mode
+        try:
+            self.getdata(col, exp, chan, res, xs, ys, zs)
+        except:
+            return False
         return self.is_terminal
 
     def setdata(
@@ -223,20 +237,33 @@ class ChunkedFilesystemStorageManager(StorageManager):
         files = file_compute(
             xs[0], xs[1], ys[0], ys[1], zs[0], zs[1], block_size=self.block_size
         )
+
         indices = blockfile_indices(xs, ys, zs, block_size=self.block_size)
 
         payload = np.zeros(
             ((xs[1] - xs[0]), (ys[1] - ys[0]), (zs[1] - zs[0])), dtype="uint8"
         )
+
         for f, i in zip(files, indices):
-            try:
+            print(f)
+            if self.fs.hasfile(col, exp, chan, res, f):
                 data_partial = self.fs.retrieve(col, exp, chan, res, f)[
                     i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
                 ]
-            except:
-                data_partial = np.zeros(self.block_size, dtype="uint8")[
-                    i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
-                ]
+            else:
+                # what to do if the file doesn't exist
+                if self.is_terminal:
+                    # this is a terminal; must return something, so return 0s
+                    data_partial = np.zeros(self.block_size, dtype="uint8")[
+                        i[0][0] : i[0][1], i[1][0] : i[1][1], i[2][0] : i[2][1]
+                    ]
+                else:
+                    # we can cascade to a downstream:
+                    # TODO: Should just fetch the data-partial instead of
+                    # aborting the whole download and getting it from a
+                    # remote.
+                    return self._next.getdata(col, exp, chan, res, xs, ys, zs)
+
             payload[
                 (f[0] + i[0][0]) - xs[0] : (f[0] + i[0][1]) - xs[0],
                 (f[1] + i[1][0]) - ys[0] : (f[1] + i[1][1]) - ys[0],
